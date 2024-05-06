@@ -9,6 +9,9 @@
 obj/main.o
 
 
+# Ignore precomiled headers
+
+
 # Ignore dependency files
 obj/main.d
 
