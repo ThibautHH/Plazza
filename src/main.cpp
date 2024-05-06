@@ -11,12 +11,12 @@
 #include <sstream>
 #include <utility>
 
-static const char USAGE[] = " [SPEED MULTIPLIER] [COOK COUNT] [RESTOCK TIME]\n\n"
-"Starts The Plazza with kitchens restocking every RESTOCK TIME milliseconds\n"
+static const char USAGE[] = " [SPEED MULTIPLIER] [COOK COUNT] [RESTOCK DELAY]\n\n"
+"Starts The Plazza with kitchens restocking every RESTOCK DELAY milliseconds\n"
 "and having COOK COUNT cooks cooking at a speed of SPEED MULTIPLIER times the\n"
 "normal speed.\n\n"
-"If RESTOCK TIME is 0, the kitchens will never run out of ingredients.\n"
-"If RESTOCK TIME is negative, the kitchens will never restock.\n",
+"If RESTOCK DELAY is 0, the kitchens will never run out of ingredients.\n"
+"If RESTOCK DELAY is negative, the kitchens will never restock.\n",
     INVALID_SPEED_MULTIPLIER[] = "Invalid speed multiplier",
     INVALID_COOK_COUNT[] = "Invalid cook count",
     INVALID_RESTOCK_DELAY[] = "Invalid restock delay";
