@@ -56,3 +56,19 @@ jobs:
             echo '::error title=Make 'fclean' rule error::Executable '"$executable"' still present'
             exit 1
           done
+
+  test-program:
+    runs-on: ubuntu-latest
+    container: epitechcontent/epitest-docker
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make
+        timeout-minutes: 2
+        run: |
+          make
+
+      - name: Run tests
+        run: |
+          make tests
