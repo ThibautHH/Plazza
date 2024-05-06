@@ -7,13 +7,16 @@
 
 # Ignore object files
 obj/main.o
+obj/Termination.o
 
 
 # Ignore precomiled headers
+obj/Termination.hpp.gch
 
 
 # Ignore dependency files
 obj/main.d
+obj/Termination.d
 
 
 # Ignore binary files
