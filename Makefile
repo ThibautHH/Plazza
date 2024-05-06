@@ -41,6 +41,7 @@ $(NAME)_TESTS			:=	$(NAME)_tests
 
 $(NAME)_MAIN_SRC		:=	$(SRC_DIR)main$(SRC_EXT)
 $(NAME)_SRCS			:=	$(addprefix $(SRC_DIR), $(addsuffix $(SRC_EXT),	\
+								Termination									\
 							))
 $($(NAME)_TESTS)_SRCS	:=	$(shell find $(TESTS_DIR) -type f				\
 							-name '*$(SRC_EXT)' ! -name ".*" 2>/dev/null)
@@ -126,12 +127,15 @@ define $(IGNORE_FILE)_CONTENT
 
 # Ignore object files
 $($(NAME)_MAIN_OBJ)
-$($(NAME)_OBJS:%=%$(nl))
-$($($(NAME)_TESTS)_OBJS:%=%$(nl))
+$($(NAME)_OBJS:=$(nl))
+$($($(NAME)_TESTS)_OBJS:=$(nl))
+# Ignore precomiled headers
+$($(NAME)_OBJS:$(OBJ_EXT)=$(PCH_EXT)$(nl))
+$($($(NAME)_TESTS)_OBJS:$(OBJ_EXT)=$(PCH_EXT)$(nl))
 # Ignore dependency files
 $($(NAME)_MAIN_DEP)
-$($(NAME)_DEPS:%=%$(nl))
-$($($(NAME)_TESTS)_DEPS:%=%$(nl))
+$($(NAME)_DEPS:=$(nl))
+$($($(NAME)_TESTS)_DEPS:=$(nl))
 # Ignore binary files
 $($(NAME)_TARGET)
 $($(NAME)_TESTS)
