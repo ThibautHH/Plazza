@@ -43,8 +43,11 @@ int main(const int argc, const char * const * const argv)
     }
 
     auto speed = parseArg<double>(argv[1], INVALID_SPEED_MULTIPLIER);
+    if (speed < 0)
+        throw std::runtime_error(INVALID_SPEED_MULTIPLIER);
     auto cookCount = parseArg<std::uint16_t>(argv[2], INVALID_COOK_COUNT);
-    std::chrono::milliseconds restockDelay(parseArg<std::uint64_t>(argv[3], INVALID_RESTOCK_DELAY));
+    if (static_cast<std::int16_t>(cookCount) <= 0)
+        throw std::runtime_error(INVALID_COOK_COUNT);
 
     return 0;
 }
