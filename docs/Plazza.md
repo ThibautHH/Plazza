@@ -38,7 +38,7 @@ enum Ingredient
 
 ### struct
 
-The pizza is defined by a struct with 3 enum.
+The pizza is defined by a struct with 2 enum.
 ```c++
 struct Pizza
 {
