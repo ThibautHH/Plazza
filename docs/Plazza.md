@@ -3,24 +3,23 @@
 The value of the pizza are defined by 3 enum.
 The first one define the type of pizza.
 The second one define the size of the pizza.
-The third one define the ingredient of the pizza.
-The value of the enum are define by a bit mask.
+The third one define the ingredient of the pizza as a bitfield.
 ```c++
 enum PizzaType
 {
-  Regina    = 0b0001,
-  Margarita = 0b0010,
-  Americana = 0b0100,
-  Fantasia  = 0b1000
+  Regina    = 1,
+  Margarita = 2,
+  Americana = 3,
+  Fantasia  = 4
 };
 
 enum PizzaSize
 {
-  S   = 0b00001,
-  M   = 0b00010,
-  L   = 0b00100,
-  XL  = 0b01000,
-  XXL = 0b10000
+  S   = 1,
+  M   = 2,
+  L   = 3,
+  XL  = 4,
+  XXL = 5
 };
 
 enum Ingredient
