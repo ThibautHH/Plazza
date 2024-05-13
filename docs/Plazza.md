@@ -44,7 +44,6 @@ struct Pizza
 {
   PizzaType type;
   PizzaSize size;
-  Ingredient ingredients;
 };
 ```
 
@@ -90,11 +89,10 @@ const std::map<PizzaType, uint8_t, ingredient> pizzaRecipe = {
 
 ### Handle kitchen
 
-Each kitchen add itsef to a queue inside the receptionist.
+Each kitchen add itself to a queue inside the receptionist.
 The receptionist always send pizza to the first kitchen in the queue and remove it from the queue.
-When the kitchen start to cook a pizza she add hersef to the queue if she as another chief.
-Whent the queue of kitchen is empty the receptionist create a new kitchen.
-
+When the kitchen start to cook a pizza she add herself to the queue if she as another chief.
+When the queue of kitchen is empty the receptionist create a new kitchen.
 
 ### CLI
 
@@ -103,7 +101,6 @@ Whent the queue of kitchen is empty the receptionist create a new kitchen.
 ```bash
 > ./plazza {COOKING_TIME} {NUMBER_OF_COOKS} {RESTOCK_TIME}
 ```
-
 
 ```bash
 > ./plazza -h
@@ -149,4 +146,3 @@ Kitchen N
     Pizzas
         {TYPE} {SIZE} x{NUMBER} end in {TIME} ms (at {TIME})
  ```
-
