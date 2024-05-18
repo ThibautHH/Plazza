@@ -39,9 +39,10 @@ endif
 $(NAME)_DISPLAY			:=	The Plazza
 $(NAME)_TESTS			:=	$(NAME)_tests
 
-$(NAME)_MAIN_SRC		:=	$(SRC_DIR)main$(SRC_EXT)
+$(NAME)_MAIN_SRC		:=	$(SRC_DIR)Main$(SRC_EXT)
 $(NAME)_SRCS			:=	$(addprefix $(SRC_DIR), $(addsuffix $(SRC_EXT),	\
 								Termination									\
+								Kitchen/Kitchen								\
 							))
 $($(NAME)_TESTS)_SRCS	:=	$(shell find $(TESTS_DIR) -type f				\
 							-name '*$(SRC_EXT)' ! -name ".*" 2>/dev/null)
@@ -91,7 +92,7 @@ GCCFLAGS				=	$(PCHFLAGS) $(PROJECT_INCLUDE_DIRS:%=-iquote %)	\
 							-Wduplicated-branches -Wlogical-op				\
 							-Wnull-dereference -Wdouble-promotion -Wshadow	\
 							-Wformat=2 -Wpedantic -Winvalid-pch				\
-							-Wl,--no-undefined								\
+							-Wl,--no-undefined -g								\
 							-fno-gnu-unique $(if $($(NAME)_SHARED),-fPIC,)
 CXXFLAGS				=	$(GCCFLAGS) -std=c++20
 CFLAGS					=	$(GCCFLAGS) -std=c99
