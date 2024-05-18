@@ -9,15 +9,18 @@
 obj/main.o
 obj/Termination.o
 obj/subprocess/subprocess.o
+obj/Kitchen/Kitchen.o
 
 # Ignore precomiled headers
 obj/Termination.hpp.gch
 obj/subprocess/subprocess.hpp.gch
+obj/Kitchen/Kitchen.hpp.gch
 
 # Ignore dependency files
 obj/main.d
 obj/Termination.d
 obj/subprocess/subprocess.d
+obj/Kitchen/Kitchen.d
 
 # Ignore binary files
 a.out
