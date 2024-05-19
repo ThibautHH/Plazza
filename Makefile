@@ -45,7 +45,7 @@ $(NAME)_SRCS			:=	$(addsuffix $(SRC_EXT),$(addprefix $(SRC_DIR),	\
 								$(addprefix subprocess/,					\
 									subprocess)								\
 								$(addprefix Kitchen/,						\
-									Kitchen)								\
+									Kitchen Cook)							\
 								$(addprefix Wrappers/,						\
 									BalancingSemaphore)						\
 							))

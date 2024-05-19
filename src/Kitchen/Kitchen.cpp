@@ -47,3 +47,17 @@ bool Kitchen::orderPizza(Pizza pizza)
     }
     return false;
 }
+
+std::ostream &operator<<(std::ostream &os, const Kitchen &kitchen)
+{
+    for (uint16_t i = 0; i < static_cast<uint16_t>(kitchen._cooks.size()); i++)
+        os << kitchen._cooks[i] << "\n";
+    os << "Ingredient\n";
+    for (uint16_t i = 0; i < 9; i++) {
+        os << '\t' << ingredientName.at(static_cast<Ingredient>(1 << i)) << ": " << kitchen._ingredients[i]->getValue();
+        if (i != 8)
+            os << "\n";
+    }
+
+    return os;
+}
