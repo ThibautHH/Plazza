@@ -47,7 +47,7 @@ $(NAME)_SRCS			:=	$(addsuffix $(SRC_EXT),$(addprefix $(SRC_DIR),	\
 								$(addprefix Kitchen/,						\
 									Kitchen Cook)							\
 								$(addprefix Wrappers/,						\
-									BalancingSemaphore)						\
+									BalancingSemaphore CountingSemaphore)	\
 							))
 
 CODING_STYLE_LOG		:=	coding-style-reports.log

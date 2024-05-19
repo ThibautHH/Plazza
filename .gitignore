@@ -12,6 +12,7 @@ obj/subprocess/subprocess.o
 obj/Kitchen/Kitchen.o
 obj/Kitchen/Cook.o
 obj/Wrappers/BalancingSemaphore.o
+obj/Wrappers/CountingSemaphore.o
 
 # Ignore precomiled headers
 obj/Termination.hpp.gch
@@ -19,6 +20,7 @@ obj/subprocess/subprocess.hpp.gch
 obj/Kitchen/Kitchen.hpp.gch
 obj/Kitchen/Cook.hpp.gch
 obj/Wrappers/BalancingSemaphore.hpp.gch
+obj/Wrappers/CountingSemaphore.hpp.gch
 
 # Ignore dependency files
 obj/main.d
@@ -27,6 +29,7 @@ obj/subprocess/subprocess.d
 obj/Kitchen/Kitchen.d
 obj/Kitchen/Cook.d
 obj/Wrappers/BalancingSemaphore.d
+obj/Wrappers/CountingSemaphore.d
 
 # Ignore binary files
 a.out
