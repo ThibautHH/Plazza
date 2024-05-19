@@ -8,8 +8,6 @@
 #ifndef COOK_HPP
 #define COOK_HPP
 
-#include <chrono>
-#include <iostream>
 #include <memory>
 
 #include "../Pizza.hpp"

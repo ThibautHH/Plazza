@@ -11,7 +11,6 @@
 #include <atomic>
 #include <functional>
 #include <semaphore>
-#include <utility>
 
 class BalancingSemaphore {
 private:

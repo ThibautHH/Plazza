@@ -7,6 +7,8 @@
 
 #include "Cook.hpp"
 
+#include <iostream>
+
 void Cook::cook(const Pizza pizza, const std::vector<std::shared_ptr<BalancingSemaphore>> &ingredients,
                 std::mutex &mutex)
 {
