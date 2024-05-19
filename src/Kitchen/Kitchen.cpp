@@ -40,7 +40,7 @@ Kitchen::~Kitchen()
 
 bool Kitchen::orderPizza(Pizza pizza)
 {
-    if (_nbCooks.getValue() < _maxCooks) {
+    if (_nbCooks.getValue() + _waitingPizzas.size() < _maxCooks * 2) {
         for (auto &cook : _cooks)
             if (!cook.isBusy()) {
                 _nbCooks.release();
@@ -54,6 +54,7 @@ bool Kitchen::orderPizza(Pizza pizza)
                     std::ref(cook));
                 return true;
             }
+        _waitingPizzas.push(pizza);
         return true;
     }
     return false;

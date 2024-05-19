@@ -8,6 +8,7 @@
 #ifndef KITCHEN_HPP
 #define KITCHEN_HPP
 
+#include <queue>
 #include <thread>
 
 #include "../Wrappers/CountingSemaphore.hpp"
@@ -23,6 +24,7 @@ private:
 
     std::vector<Cook> _cooks;
     std::vector<std::thread> _threadsCooks;
+    std::queue<Pizza> _waitingPizzas;
 
     std::shared_ptr<std::atomic<bool>> _isRunning = std::make_shared<std::atomic<bool>>(true);
 
