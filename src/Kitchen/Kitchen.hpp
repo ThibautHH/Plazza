@@ -12,6 +12,7 @@
 #include <thread>
 #include <vector>
 
+#include "../Wrappers/BalancingSemaphore.hpp"
 #include "Cook.hpp"
 
 class Kitchen {
@@ -23,7 +24,12 @@ private:
     uint16_t _nbCooks = 0;
 
     std::vector<Cook> _cooks;
-    std::vector<std::thread> _threads;
+    std::vector<std::thread> _threadsCooks;
+
+    std::shared_ptr<std::atomic<bool>> _isRunning = std::make_shared<std::atomic<bool>>(true);
+
+    std::vector<std::shared_ptr<BalancingSemaphore>> _ingredients;
+    std::vector<std::thread> _threadsIngredients;
 
     std::mutex _mutex;
 
@@ -35,10 +41,14 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const Kitchen &kitchen)
     {
-        for (uint16_t i = 0; i < static_cast<uint16_t>(kitchen._cooks.size()); i++) {
-            os << kitchen._cooks[i];
-            if (i + 1 < static_cast<uint16_t>(kitchen._cooks.size()))
-                os << std::endl;
+        for (uint16_t i = 0; i < static_cast<uint16_t>(kitchen._cooks.size()); i++)
+            os << kitchen._cooks[i] << "\n";
+        os << "Ingredient\n";
+        for (uint16_t i = 0; i < 9; i++) {
+            os << '\t' << ingredientName.at(static_cast<Ingredient>(1 << i)) << ": "
+               << kitchen._ingredients[i]->getValue();
+            if (i != 8)
+                os << "\n";
         }
 
         return os;

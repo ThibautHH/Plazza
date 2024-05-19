@@ -46,6 +46,8 @@ $(NAME)_SRCS			:=	$(addsuffix $(SRC_EXT),$(addprefix $(SRC_DIR),	\
 									subprocess)								\
 								$(addprefix Kitchen/,						\
 									Kitchen)								\
+								$(addprefix Wrappers/,						\
+									BalancingSemaphore)						\
 							))
 
 CODING_STYLE_LOG		:=	coding-style-reports.log
