@@ -18,7 +18,7 @@ Kitchen::Kitchen(const uint16_t maxCooks, const uint16_t cookingTime, const uint
 
     for (uint16_t i = 0; i < 9; i++)
         _threadsIngredients.emplace_back(
-            [this, i]()
+            [this, i]
             {
                 while (*_isRunning)
                     _ingredients[i]->release([] { std::this_thread::sleep_for(std::chrono::milliseconds(1000)); });
@@ -48,14 +48,13 @@ bool Kitchen::orderPizza(Pizza pizza)
 
 std::ostream &operator<<(std::ostream &os, const Kitchen &kitchen)
 {
-    for (uint16_t i = 0; i < static_cast<uint16_t>(kitchen._cooks.size()); i++)
-        os << kitchen._cooks[i] << "\n";
-    os << "Ingredient\n";
-    for (uint16_t i = 0; i < 9; i++) {
-        os << '\t' << ingredientName.at(static_cast<Ingredient>(1 << i)) << ": " << kitchen._ingredients[i]->getValue();
-        if (i != 8)
-            os << "\n";
-    }
+    os << "Kitchen:\n  Cooks:";
+    for (const auto &cook : kitchen._cooks)
+        os << "\n    " << cook;
+    os << "\n  Ingredients:";
+    for (uint16_t i = 0; i < 9; i++)
+        os << "\n    " << ingredientName.at(static_cast<Ingredient>(1 << i)) << ": "
+           << kitchen._ingredients[i]->getValue();
 
     return os;
 }
