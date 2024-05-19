@@ -16,7 +16,7 @@
 class Cook {
 private:
     const uint16_t _id;
-    uint16_t _cookingTime;
+    float _cookingTime;
     Pizza _pizza;
 
     bool _isBusy = false;
@@ -24,12 +24,12 @@ private:
     std::chrono::system_clock::time_point _endCookingTime;
 
 public:
-    Cook(const uint16_t id, const uint16_t cookingTime) : _id(id), _cookingTime(cookingTime) {}
+    Cook(const uint16_t id, const float cookingTime) : _id(id), _cookingTime(cookingTime) {}
 
     void cook(Pizza pizza, const std::vector<std::shared_ptr<BalancingSemaphore>> &ingredients, std::mutex &mutex);
 
     [[nodiscard]] uint16_t getId() const { return _id; }
-    [[nodiscard]] uint16_t getCookingTime() const { return _cookingTime; }
+    [[nodiscard]] float getCookingTime() const { return _cookingTime; }
     [[nodiscard]] Pizza getPizza() const { return _pizza; }
     [[nodiscard]] bool isBusy() const { return _isBusy; }
     [[nodiscard]] std::chrono::system_clock::time_point getEndCookingTime() const { return _endCookingTime; }

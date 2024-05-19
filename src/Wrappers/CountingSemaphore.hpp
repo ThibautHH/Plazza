@@ -21,6 +21,7 @@ public:
 
     void acquire();
     void release();
+    void wait();
     [[nodiscard]] uint32_t getValue() const { return _counter; }
 };
 
