@@ -17,7 +17,7 @@ void Cook::cook(const Pizza pizza, const std::vector<std::shared_ptr<BalancingSe
     _pizza  = pizza;
     mutex.unlock();
 
-    for (uint16_t i = 0; i < 9; i++)
+    for (uint16_t i = 0; i < NB_INGREDIENTS; i++)
         for (uint16_t j = 0; j < pizzaRecipe.at(_pizza.type).first; j++)
             if (const auto ingredient = static_cast<Ingredient>(1 << i);
                 pizzaRecipe.at(_pizza.type).second & ingredient)
