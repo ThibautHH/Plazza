@@ -45,7 +45,7 @@ std::ostream &operator<<(std::ostream &os, const Cook &cook)
                                                                                 std::chrono::system_clock::now())
                               .count();
         cook.isBusy() && diff > 0)
-        os << "Cook " << cook.getId() + 1 << " is cooking a " << pizzaName.at(cook.getPizza().type) << " "
+        os << "Cook " << cook.getId() << " is cooking a " << pizzaName.at(cook.getPizza().type) << " "
            << pizzaSize.at(cook.getPizza().size) << " x" << cook.getPizza().number << " end in " << diff << "ms";
     else
         os << "Cook " << cook.getId() << " is waiting for a pizza";
