@@ -19,6 +19,7 @@ int main(int, const char *const *)
     }
     usleep(10500000);
     std::cout << kitchen << std::endl;
+    usleep(9500000);
 
     return 0;
 }

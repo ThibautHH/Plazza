@@ -20,18 +20,18 @@ private:
     const float _cookingTime;
     const uint32_t _reloadTime;
 
-    CountingSemaphore _nbCooks{0};
-
-    std::vector<Cook> _cooks;
-    std::vector<std::thread> _threadsCooks;
-    std::queue<Pizza> _waitingPizzas;
-
     std::shared_ptr<std::atomic<bool>> _isRunning = std::make_shared<std::atomic<bool>>(true);
+    std::mutex _mutex;
+
+    CountingSemaphore _nbCooks{5};
+    std::vector<std::pair<Cook, std::thread>> _cooks;
+
+    std::queue<Pizza> _waitingPizzas;
+    CountingSemaphore _asWaitingPizzas{0};
+    std::thread _cooksManager;
 
     std::vector<std::shared_ptr<BalancingSemaphore>> _ingredients;
     std::vector<std::thread> _threadsIngredients;
-
-    std::mutex _mutex;
 
 public:
     Kitchen(uint16_t maxCooks, uint16_t cookingTime, uint32_t reloadTime);

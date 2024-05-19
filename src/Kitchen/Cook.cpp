@@ -24,8 +24,9 @@ void Cook::cook(const Pizza pizza, const std::vector<std::shared_ptr<BalancingSe
                 ingredients[i]->acquire();
 
     mutex.lock();
-    const auto duration = std::chrono::milliseconds(_cookingTime * pizzaRecipe.at(_pizza.type).first * 1000);
-    _endCookingTime     = std::chrono::system_clock::now() + duration;
+    const auto duration = std::chrono::milliseconds(
+        static_cast<int>(_cookingTime * static_cast<float>(pizzaRecipe.at(_pizza.type).first) * 1000));
+    _endCookingTime = std::chrono::system_clock::now() + duration;
     mutex.unlock();
 
     for (uint16_t i = 0; i < _pizza.number; i++)

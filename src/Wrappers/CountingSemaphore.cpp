@@ -18,3 +18,9 @@ void CountingSemaphore::release()
     _semaphore.release();
     ++_counter;
 }
+
+void CountingSemaphore::wait()
+{
+    _semaphore.acquire();
+    _semaphore.release();
+}
