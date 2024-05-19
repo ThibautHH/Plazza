@@ -6,6 +6,7 @@
 */
 
 #include "BalancingSemaphore.hpp"
+
 void BalancingSemaphore::acquire()
 {
     _semaphore.first.acquire();

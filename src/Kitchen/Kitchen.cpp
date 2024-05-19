@@ -7,8 +7,6 @@
 
 #include "Kitchen.hpp"
 
-#include <csignal>
-
 Kitchen::Kitchen(const uint16_t maxCooks, const uint16_t cookingTime, const uint32_t reloadTime) :
     _maxCooks(maxCooks), _cookingTime(cookingTime), _reloadTime(reloadTime)
 {

@@ -5,6 +5,8 @@
 ** Program entrypoint
 */
 
+#include <iostream>
+
 #include "Kitchen/Kitchen.hpp"
 
 int main(int, const char *const *)

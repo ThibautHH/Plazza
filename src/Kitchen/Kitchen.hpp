@@ -8,11 +8,8 @@
 #ifndef KITCHEN_HPP
 #define KITCHEN_HPP
 
-#include <cstdint>
 #include <thread>
-#include <vector>
 
-#include "../Wrappers/BalancingSemaphore.hpp"
 #include "Cook.hpp"
 
 class Kitchen {

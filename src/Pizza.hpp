@@ -8,7 +8,6 @@
 #ifndef PIZZA_HPP
 #define PIZZA_HPP
 
-#include <cstdint>
 #include <map>
 
 enum PizzaType { Regina = 1, Margarita = 2, Americana = 3, Fantasia = 4 };
