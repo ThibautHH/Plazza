@@ -7,6 +7,8 @@
 
 #include "Kitchen.hpp"
 
+#include <iostream>
+
 Kitchen::Kitchen(const uint16_t maxCooks, const uint16_t cookingTime, const uint32_t reloadTime) :
     _maxCooks(maxCooks), _cookingTime(cookingTime), _reloadTime(reloadTime)
 {
@@ -39,14 +41,19 @@ Kitchen::~Kitchen()
 bool Kitchen::orderPizza(Pizza pizza)
 {
     if (_nbCooks.getValue() < _maxCooks) {
-        _nbCooks.release();
-        _threadsCooks.emplace_back(
-            [this, pizza](Cook &cook)
-            {
-                cook.cook(pizza, _ingredients, _mutex);
-                _nbCooks.acquire();
-            },
-            std::ref(_cooks[_nbCooks.getValue() - 1]));
+        for (auto &cook : _cooks)
+            if (!cook.isBusy()) {
+                _nbCooks.release();
+                cook.setBusy(true);
+                _threadsCooks.emplace_back(
+                    [this, pizza](Cook &currentCook)
+                    {
+                        currentCook.cook(pizza, _ingredients, _mutex);
+                        _nbCooks.acquire();
+                    },
+                    std::ref(cook));
+                return true;
+            }
         return true;
     }
     return false;
