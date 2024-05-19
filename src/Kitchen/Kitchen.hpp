@@ -10,6 +10,7 @@
 
 #include <thread>
 
+#include "../Wrappers/CountingSemaphore.hpp"
 #include "Cook.hpp"
 
 class Kitchen {
@@ -18,7 +19,7 @@ private:
     const float _cookingTime;
     const uint32_t _reloadTime;
 
-    uint16_t _nbCooks = 0;
+    CountingSemaphore _nbCooks{0};
 
     std::vector<Cook> _cooks;
     std::vector<std::thread> _threadsCooks;

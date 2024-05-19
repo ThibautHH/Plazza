@@ -38,9 +38,15 @@ Kitchen::~Kitchen()
 
 bool Kitchen::orderPizza(Pizza pizza)
 {
-    if (_nbCooks < _maxCooks) {
-        _threadsCooks.emplace_back([this, pizza](Cook &cook) { cook.cook(pizza, _ingredients, _mutex); },
-                                   std::ref(_cooks[_nbCooks++]));
+    if (_nbCooks.getValue() < _maxCooks) {
+        _nbCooks.release();
+        _threadsCooks.emplace_back(
+            [this, pizza](Cook &cook)
+            {
+                cook.cook(pizza, _ingredients, _mutex);
+                _nbCooks.acquire();
+            },
+            std::ref(_cooks[_nbCooks.getValue() - 1]));
         return true;
     }
     return false;
@@ -48,7 +54,7 @@ bool Kitchen::orderPizza(Pizza pizza)
 
 std::ostream &operator<<(std::ostream &os, const Kitchen &kitchen)
 {
-    os << "Kitchen:\n  Cooks:";
+    os << "Kitchen: (" << kitchen._nbCooks.getValue() << "/" << kitchen._maxCooks << " cooks)\n  Cooks:";
     for (const auto &cook : kitchen._cooks)
         os << "\n    " << cook;
     os << "\n  Ingredients:";

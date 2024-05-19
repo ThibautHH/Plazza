@@ -17,7 +17,7 @@ int main(int, const char *const *)
     for (uint8_t i = 0; i < 10; i++) {
         kitchen.orderPizza(pizza);
     }
-    sleep(5);
+    usleep(10500000);
     std::cout << kitchen << std::endl;
 
     return 0;

@@ -23,6 +23,7 @@ SRC			+=	$(addprefix $(lastword $(DIR))/,					\
 DIR			+=	src/Wrappers
 SRC			+=	$(addprefix $(lastword $(DIR))/,					\
 					BalancingSemaphore.cpp							\
+					CountingSemaphore.cpp							\
 				)
 
 FU_DIR		:=	tests/func
