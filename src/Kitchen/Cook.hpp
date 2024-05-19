@@ -19,7 +19,7 @@ private:
     uint16_t _cookingTime;
     Pizza _pizza;
 
-    bool _isCooking = false;
+    bool _isBusy = false;
 
     std::chrono::system_clock::time_point _endCookingTime;
 
@@ -31,8 +31,10 @@ public:
     [[nodiscard]] uint16_t getId() const { return _id; }
     [[nodiscard]] uint16_t getCookingTime() const { return _cookingTime; }
     [[nodiscard]] Pizza getPizza() const { return _pizza; }
-    [[nodiscard]] bool isCooking() const { return _isCooking; }
+    [[nodiscard]] bool isBusy() const { return _isBusy; }
     [[nodiscard]] std::chrono::system_clock::time_point getEndCookingTime() const { return _endCookingTime; }
+
+    void setBusy(const bool isBusy) { _isBusy = isBusy; }
 
     friend std::ostream &operator<<(std::ostream &os, const Cook &cook);
 };

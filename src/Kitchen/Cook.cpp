@@ -13,8 +13,8 @@ void Cook::cook(const Pizza pizza, const std::vector<std::shared_ptr<BalancingSe
                 std::mutex &mutex)
 {
     mutex.lock();
-    _pizza     = pizza;
-    _isCooking = true;
+    _isBusy = true;
+    _pizza  = pizza;
     mutex.unlock();
 
     for (uint16_t i = 0; i < 9; i++)
@@ -34,7 +34,7 @@ void Cook::cook(const Pizza pizza, const std::vector<std::shared_ptr<BalancingSe
     mutex.lock();
     std::cout << "Cook " << _id << " finished cooking a " << pizzaName.at(_pizza.type) << " "
               << pizzaSize.at(_pizza.size) << " x" << _pizza.number << std::endl;
-    _isCooking = false;
+    _isBusy = false;
     mutex.unlock();
 }
 
@@ -44,7 +44,7 @@ std::ostream &operator<<(std::ostream &os, const Cook &cook)
     if (const auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(cook.getEndCookingTime() -
                                                                                 std::chrono::system_clock::now())
                               .count();
-        cook.isCooking() && diff > 0)
+        cook.isBusy() && diff > 0)
         os << "Cook " << cook.getId() + 1 << " is cooking a " << pizzaName.at(cook.getPizza().type) << " "
            << pizzaSize.at(cook.getPizza().size) << " x" << cook.getPizza().number << " end in " << diff << "ms";
     else
