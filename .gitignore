@@ -1,41 +1,64 @@
-##
-## EPITECH PROJECT, 2024
-## The Plazza
-## File description:
-## .gitignore
-##
+# Prerequisites
+*.d
 
-# Ignore object files
-obj/main.o
-obj/Termination.o
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
 
+# Linker output
+*.ilk
+*.map
+*.exp
 
-# Ignore precomiled headers
-obj/Termination.hpp.gch
+# Precompiled Headers
+*.gch
+*.pch
 
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
 
-# Ignore dependency files
-obj/main.d
-obj/Termination.d
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
 
-
-# Ignore binary files
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
 plazza
-plazza_tests
-a.out
 
-# Ignore logs and reports
-*.gcda
-*.gcno
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+report
+.cache
+.vscode
+.idea
+build
+compile_commands.json
+
+# Miscellaneous
+.save.out
 vgcore.*
-
-# Ignore coding-style logs
-coding-style-reports.log
-
-# Ignore temporary files
-*tmp*
-*~
-\#*#
-.#*
-
-# Miscellanous

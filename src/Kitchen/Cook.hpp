@@ -10,26 +10,9 @@
 
 #include <chrono>
 #include <iostream>
-#include <map>
-#include <thread>
+#include <memory>
 
 #include "../Pizza.hpp"
-
-static const std::map<PizzaType, std::pair<uint8_t, uint16_t>> pizzaRecipe = {
-    {Regina, {1, {DOUGH | TOMATO | GRUYERE | HAM}}},
-    {Margarita, {2, {DOUGH | TOMATO | GRUYERE}}},
-    {Americana, {2, {DOUGH | TOMATO | GRUYERE | HAM | EGGPLANT}}},
-    {Fantasia, {4, {DOUGH | TOMATO | GOAT_CHEESE | CHIEF_LOVE}}}};
-
-static const std::map<PizzaType, std::string_view> pizzaName = {
-    {Regina, "Regina"}, {Margarita, "Margarita"}, {Americana, "Americana"}, {Fantasia, "Fantasia"}};
-
-static const std::map<Ingredient, std::string_view> ingredientName = {
-    {DOUGH, "Dough"},       {TOMATO, "Tomato"},           {GRUYERE, "Gruyere"},
-    {HAM, "Ham"},           {MUSHROOMS, "Mushrooms"},     {STEAK, "Steak"},
-    {EGGPLANT, "Eggplant"}, {GOAT_CHEESE, "Goat Cheese"}, {CHIEF_LOVE, "Chief Love"}};
-
-static const std::map<PizzaSize, std::string_view> pizzaSize = {{S, "S"}, {M, "M"}, {L, "L"}, {XL, "XL"}, {XXL, "XXL"}};
 
 class Cook {
 private:
@@ -44,7 +27,7 @@ private:
 public:
     Cook(const uint16_t id, const uint16_t cookingTime) : _id(id), _cookingTime(cookingTime) {}
 
-    void cook(const Pizza pizza, std::mutex &mutex)
+    void cook(const Pizza pizza, const std::vector<std::shared_ptr<BalancingSemaphore>> &ingredients, std::mutex &mutex)
     {
         mutex.lock();
         _pizza     = pizza;
@@ -54,6 +37,11 @@ public:
         _endCookingTime     = std::chrono::system_clock::now() + duration;
         mutex.unlock();
 
+        for (uint16_t i = 0; i < 9; i++)
+            for (uint16_t j = 0; j < pizzaRecipe.at(_pizza.type).first; j++)
+                if (const auto ingredient = static_cast<Ingredient>(1 << i);
+                    pizzaRecipe.at(_pizza.type).second & ingredient)
+                    ingredients[i]->acquire();
         for (uint16_t i = 0; i < _pizza.number; i++)
             std::this_thread::sleep_for(duration);
 

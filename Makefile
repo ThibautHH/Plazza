@@ -1,239 +1,125 @@
 ##
 ## EPITECH PROJECT, 2024
-## The Plazza
+## Plazza
 ## File description:
 ## Makefile
 ##
 
-.SECONDEXPANSION:
-SRC_DIR					:=	src/
-OBJ_DIR					:=	obj/
-TESTS_DIR				:=	tests/
+NAME		:=	plazza
+EXT			:=	.cpp
 
-LANG					:=	cpp
+DIR			:=	src
+SRC			:=	$(addprefix $(DIR)/,								\
+					Main.cpp										\
+					Termination.cpp									\
+				)
 
-ifeq ($(LANG),cpp)
-SRC_EXT					:=	.cpp
-HDR_EXT					:=	.hpp
-else ifeq ($(LANG), c)
-SRC_EXT					:=	.c
-HDR_EXT					:=	.h
-endif
-OBJ_EXT					:=	.o
-DEP_EXT					:=	.d
-PCH_EXT					:=	$(HDR_EXT).gch
+DIR			+=	src/Kitchen
+SRC			+=	$(addprefix $(lastword $(DIR))/,					\
+					Kitchen.cpp										\
+				)
 
-NAME					:=	plazza
-$(NAME)_LINK			:=	1
-ifdef $(NAME)_LINK
-$(NAME)_TARGET			:=	$(NAME)
-else
-#$(NAME)_SHARED			:=	1
-ifdef $(NAME)_SHARED
-LIB_EXT					:=	.so
-else
-LIB_EXT					:=	.a
-endif
-$(NAME)_TARGET			:=	$(NAME:%=lib%$(LIB_EXT))
-endif
-$(NAME)_DISPLAY			:=	The Plazza
-$(NAME)_TESTS			:=	$(NAME)_tests
+DIR			+=	src/Wrappers
+SRC			+=	$(addprefix $(lastword $(DIR))/,					\
+					BalancingSemaphore.cpp							\
+				)
 
-$(NAME)_MAIN_SRC		:=	$(SRC_DIR)Main$(SRC_EXT)
-$(NAME)_SRCS			:=	$(addprefix $(SRC_DIR), $(addsuffix $(SRC_EXT),	\
-								Termination									\
-								Kitchen/Kitchen								\
-							))
-$($(NAME)_TESTS)_SRCS	:=	$(shell find $(TESTS_DIR) -type f				\
-							-name '*$(SRC_EXT)' ! -name ".*" 2>/dev/null)
+FU_DIR		:=	tests/func
 
-IGNORE_FILE				:=	.gitignore
-IGNORED_FILES			:=
-ifndef $(NAME)_LINK
-IGNORED_FILES			+=  $($(NAME)_MAIN_SRC)
-endif
-CODING_STYLE_LOG		:=	coding-style-reports.log
-CODING_STYLE_IMAGE		:=	ghcr.io/epitech/coding-style-checker:latest
+UT_DIR		:=	tests/unit
+UT_SRC		:=	$(filter-out src/main.c, $(SRC))
+UT_SRC		+=	$(addprefix $(UT_DIR)/,								\
+				)
 
-$(NAME)_MAIN_OBJ		:=													\
-	$($(NAME)_MAIN_SRC:$(SRC_DIR)%$(SRC_EXT)=$(OBJ_DIR)%$(OBJ_EXT))
-$(NAME)_OBJS			:=													\
-	$($(NAME)_SRCS:$(SRC_DIR)%$(SRC_EXT)=$(OBJ_DIR)%$(OBJ_EXT))
-$($(NAME)_TESTS)_OBJS	:=													\
-	$($($(NAME)_TESTS)_SRCS:$(SRC_DIR)%$(SRC_EXT)=$(OBJ_DIR)%$(OBJ_EXT))
+DIR_BUILD	:=	build
+DIR_BIN		:=	$(DIR_BUILD)/bin
 
-$(NAME)_MAIN_DEP		:=	$($(NAME)_MAIN_OBJ:$(OBJ_EXT)=$(DEP_EXT))
-$(NAME)_DEPS			:=	$($(NAME)_OBJS:$(OBJ_EXT)=$(DEP_EXT))
-$($(NAME)_TESTS)_DEPS	:=	$($($(NAME)_TESTS)_OBJS:$(OBJ_EXT)=$(DEP_EXT))
+DIR_OBJ		:=	$(DIR_BUILD)/obj
+OBJ			:=	$(patsubst %$(EXT),$(DIR_OBJ)/%.o,$(SRC))
+DEP			:=	$(OBJ:.o=.d)
 
-LIBS					:=
-ifndef $(NAME)_LINK
-LIB_DIRS				+=	$(dir $($(NAME)_TARGET))
-endif
-RM						:=	rm -r
-AR						:=	ar
-ARFLAGS					:=	rcs
-CXX						:=	g++
-GCC						:=	gcc
-CC						:=	$(GCC)
-DOCKER					:=	[ -r /var/run/docker.sock ] &&	\
-							[ -w /var/run/docker.sock ]
-DOCKER					:=	cmd="$$(which docker)"	\
-							&& if ! ($(DOCKER));	\
-							then cmd="sudo $${cmd}";\
-							fi; echo "$${cmd}"
-DOCKER					:=	$(shell $(DOCKER))
-HDR						=	$(findstring $(SRC_DIR)$*$(HDR_EXT),$^)
-PCH						=	$(HDR:$(SRC_DIR)%$(HDR_EXT)=$(OBJ_DIR)%$(PCH_EXT))
-PCHFLAGS				=	$(patsubst %,-iquote %,$(dir $(PCH)))			\
-							$(patsubst %,-include %,$(notdir $(HDR)))
-GCCFLAGS				=	$(PCHFLAGS) $(PROJECT_INCLUDE_DIRS:%=-iquote %)	\
-							-W -Wall -Wextra -Wduplicated-cond				\
-							-Wduplicated-branches -Wlogical-op				\
-							-Wnull-dereference -Wdouble-promotion -Wshadow	\
-							-Wformat=2 -Wpedantic -Winvalid-pch				\
-							-Wl,--no-undefined -g								\
-							-fno-gnu-unique $(if $($(NAME)_SHARED),-fPIC,)
-CXXFLAGS				=	$(GCCFLAGS) -std=c++20
-CFLAGS					=	$(GCCFLAGS) -std=c99
-ifeq ($(LANG),cpp)
-COMPILER				:=	$(CXX)
-LINKER					:=	$(CXX)
-FLAGS					=	$(CXXFLAGS)
-else ifeq ($(LANG), c)
-COMPILER				:=	$(CC)
-LINKER					:=	$(CC)
-FLAGS					=	$(CFLAGS)
-endif
-LDLIBS					=	$(LIBS:%=-l%)
-LDFLAGS					=	$(LIB_DIRS:%=-L%)
+UT_DIR_OBJ	:=	$(DIR_BUILD)/tests/unit
+UT_OBJ		:=	$(patsubst %$(EXT),$(UT_DIR_OBJ)/%.o,$(UT_SRC))
+UT_DEP		:=	$(UT_OBJ:.o=.d)
 
-all:					$(IGNORE_FILE) $($(NAME)_TARGET)
-	@:
+DG_DIR_OBJ	:=	$(DIR_BUILD)/debug
+DG_OBJ		:=	$(patsubst %$(EXT),$(DG_DIR_OBJ)/%.o,$(SRC))
+DG_DEP		:=	$(DG_OBJ:.o=.d)
 
-debug:					GCCFLAGS += -g
-debug:					all
+DEBUG		:=	$(DIR_BIN)/debug
+FU_TEST		:=	$(FU_DIR)/tester.sh
+UT_TEST		:=	$(DIR_BIN)/unit_test
 
-define nl
+RM			:=	rm -rf
 
+CC			:=	g++
+CFLAGS		:=	-Wall -Wextra -std=c++20
+LDFLAGS		:=
 
-endef
-define $(IGNORE_FILE)_CONTENT
-##
-## EPITECH PROJECT, $(shell date +%Y)
-## $($(NAME)_DISPLAY)
-## File description:
-## $(IGNORE_FILE)
-##
+all:				$(NAME)
 
-# Ignore object files
-$($(NAME)_MAIN_OBJ)
-$($(NAME)_OBJS:=$(nl))
-$($($(NAME)_TESTS)_OBJS:=$(nl))
-# Ignore precomiled headers
-$($(NAME)_OBJS:$(OBJ_EXT)=$(PCH_EXT)$(nl))
-$($($(NAME)_TESTS)_OBJS:$(OBJ_EXT)=$(PCH_EXT)$(nl))
-# Ignore dependency files
-$($(NAME)_MAIN_DEP)
-$($(NAME)_DEPS:=$(nl))
-$($($(NAME)_TESTS)_DEPS:=$(nl))
-# Ignore binary files
-$($(NAME)_TARGET)
-$($(NAME)_TESTS)
-a.out
-
-# Ignore logs and reports
-*.gcda
-*.gcno
-vgcore.*
-
-# Ignore coding-style logs
-$(CODING_STYLE_LOG)
-
-# Ignore temporary files
-*tmp*
-*~
-\#*#
-.#*
-
-# Miscellanous
-$(IGNORED_FILES:%=%$(nl))
+define CREATE_DIR
+	@if [ ! -d $(dir $@) ]; then									\
+		mkdir -p $(dir $@) 											\
+		&& printf "\033[93m[CREATED]\033[0m %s\n" $(dir $@)			\
+		|| printf "\033[31m[ERROR]\033[0m %s\n"   $(dir $@);		\
+	fi
 endef
 
-$(IGNORE_FILE):
-ifeq ($(wildcard $(IGNORE_FILE)),)
-	@-echo 'Generating $@ file...' >&2
-else
-	@-echo 'Updating $@ file...' >&2
-endif
-	@echo -ne "$(subst $(nl),\n,$($@_CONTENT))" > $@
-	@sed -i -E 's/^ //g' $@
+define BUILD_OBJ
+	@$(RM) $(patsubst %.o,%.gcda,$@)
+	@$(RM) $(patsubst %.o,%.gcno,$@)
+	$(CREATE_DIR)
+	@$(CC) $(CFLAGS) -MMD -c $< -o $@								\
+	&& printf "\033[32m[OK]\033[0m %s\n" $<							\
+	|| printf "\033[31m[KO]\033[0m %s\n" $<
+endef
 
-$($(NAME)_TARGET):		$($(NAME)_OBJS)
-ifdef $(NAME)_LINK
-$($(NAME)_TARGET):		$($(NAME)_MAIN_OBJ)
-	@-echo 'Linking $@ binary...'
-	@$(LINKER) $(FLAGS) -o $@ $^ $(LDLIBS) $(LDFLAGS)
-else
-$($(NAME)_TARGET):
-	@-echo 'Archiving $(@:lib%$(LIB_EXT)=%) objects into $@...'
-	@$(AR) $(ARFLAGS) $@ $^
+$(DIR_OBJ)/%.o:		%$(EXT); $(BUILD_OBJ)
+$(UT_DIR_OBJ)/%.o:	%$(EXT); $(BUILD_OBJ)
+$(DG_DIR_OBJ)/%.o:	%$(EXT); $(BUILD_OBJ)
 
-main_debug:				GCCFLAGS += -g
-main_debug:				main
-	@:
+define COMPILE
+	$(CREATE_DIR)
+	@$(CC) -o $@ $^ $(LDFLAGS)			 							\
+	&& printf "\033[32m[SUCCES]\033[0m %s\n" $@						\
+	|| printf "\033[31m[ERROR]\033[0m %s\n"  $@
+endef
 
-main: 					LIBS += $(NAME)
-main:					$($(NAME)_MAIN_OBJ) $($(NAME)_TARGET)	\
-						$(IGNORE_FILE)
-	@-echo 'Linking $(NAME) binary...'
-	@$(COMPILER) $(FLAGS) -o $(NAME) $< $(LDLIBS) $(LDFLAGS)
+-include $(DEP)
+$(NAME):			$(OBJ); 	$(COMPILE)
 
-.PHONY:					main main_debug
-endif
+tests_functional:	$(FU_TEST) $(NAME)
+	@$^
 
--include $($(NAME)_MAIN_DEP) $($(NAME)_DEPS) $($($(NAME)_TESTS)_DEPS)
+-include $(UT_DEP)
+$(UT_TEST):			LDFLAGS += -lcriterion --coverage
+$(UT_TEST):			$(UT_OBJ);	$(COMPILE)
+tests_unit:			$(UT_TEST)
+	@cp $(UT_TEST) $(UT_DIR_OBJ)
+	@$(UT_DIR_OBJ)/$(notdir $<)
 
-$(OBJ_DIR)%$(DEP_EXT):	$(SRC_DIR)%$(SRC_EXT)
-	@-echo 'Generating dependencies for $<...' >&2
-	@mkdir -p $(dir $@)
-	@$(GCC) $< -MM -MF $@ -MT $(@:$(DEP_EXT)=$(OBJ_EXT)) $(GCCFLAGS)
+-include $(DG_DEP)
+$(DEBUG):			CFLAGS += -g -DDEBUG
+$(DEBUG):			$(DG_OBJ); 	$(COMPILE)
+debug:				$(DEBUG)
 
-$(OBJ_DIR)%$(PCH_EXT):	$(SRC_DIR)%$(HDR_EXT)
-	@-echo 'Precompiling $<...' >&2
-	@mkdir -p $(dir $@)
-	@$(COMPILER) -c $(filter-out $(PCHFLAGS),$(FLAGS)) $< -o $@
-
-$(OBJ_DIR)%$(OBJ_EXT):	$(SRC_DIR)%$(SRC_EXT) $$(PCH)
-	@-echo 'Compiling $<...' >&2
-	@mkdir -p $(dir $@)
-	@$(COMPILER) -c $(FLAGS) $< -o $@
-
-docs:					$(IGNORE_FILE)
-	@-echo 'Generating documentation...' >&2
-	@doxygen
-
-coding-style:			fclean
-	@-echo 'Checking coding style...' >&2
-	@$(DOCKER) run --rm -v .:/mnt $(CODING_STYLE_IMAGE) /mnt /mnt
+tests_run:			tests_functional tests_unit
+	gcovr $(UT_DIR_OBJ) --exclude tests/
+	gcovr $(UT_DIR_OBJ) --exclude tests/ --branches
 
 clean:
-	@-echo 'Deleting build directory...' >&2
-	@$(RM) -f $(OBJ_DIR)
-	@-echo 'Cleaning up unecessary files...' >&2
-	@-find \( -name '*~' -o -name 'vgcore.*' -o -name '*.gc*'	\
-	-o -name 'a.out' -o -name '$(CODING_STYLE_LOG)' \) -delete
+	@[ -d $(DIR_BUILD) ]											\
+	&& $(RM) $(DIR_BUILD)											\
+	&& printf "\033[31m[DELETED]\033[0m %s\n" $(DIR_BUILD) || true
 
-fclean:					clean
-	@-echo 'Deleting $($(NAME)_TARGET)...' >&2
-	@$(RM) -f $($(NAME)_TARGET)
-	@-echo 'Deleting $($(NAME)_TESTS)...' >&2
-	@$(RM) -f $($(NAME)_TESTS)
+fclean:				clean
+	@[ -f $(NAME) ]													\
+	&& $(RM) $(NAME)												\
+	&& printf "\033[31m[DELETED]\033[0m %s\n" $(NAME) || true
 
-re:						fclean all
+re:					fclean all
 
-re_tests:				fclean tests_run
+.PHONY:				all tests tests_run debug clean fclean re doc
 
-.PHONY:					all debug tests_run tests_debug coverage	\
-						clean fclean re re_tests					\
-						docs coding-style $(IGNORE_FILE)
+.SILENT:			all tests tests_run debug clean fclean re doc
