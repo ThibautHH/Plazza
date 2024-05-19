@@ -17,6 +17,7 @@ SRC			:=	$(addprefix $(DIR)/,								\
 DIR			+=	src/Kitchen
 SRC			+=	$(addprefix $(lastword $(DIR))/,					\
 					Kitchen.cpp										\
+					Cook.cpp										\
 				)
 
 DIR			+=	src/Wrappers

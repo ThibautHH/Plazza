@@ -21,35 +21,11 @@ private:
 public:
     BalancingSemaphore(const int initialCount) : _semaphore(initialCount, 0), _counter(initialCount) {}
 
-    void acquire()
-    {
-        _semaphore.first.acquire();
-        _semaphore.second.release();
-        --_counter;
-    }
+    void acquire();
+    void acquire(std::function<void()> const &lambda);
 
-    void acquire(std::function<void()> const &lambda)
-    {
-        _semaphore.first.acquire();
-        lambda();
-        _semaphore.second.release();
-        --_counter;
-    }
-
-    void release()
-    {
-        _semaphore.second.acquire();
-        _semaphore.first.release();
-        ++_counter;
-    }
-
-    void release(std::function<void()> const &lambda)
-    {
-        _semaphore.second.acquire();
-        lambda();
-        _semaphore.first.release();
-        ++_counter;
-    }
+    void release();
+    void release(std::function<void()> const &lambda);
 
     [[nodiscard]] uint32_t getValue() const { return _counter; }
 };
