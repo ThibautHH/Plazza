@@ -90,8 +90,8 @@ GCCFLAGS				=	$(PCHFLAGS) $(PROJECT_INCLUDE_DIRS:%=-iquote %)	\
 							-Wduplicated-branches -Wlogical-op				\
 							-Wnull-dereference -Wdouble-promotion -Wshadow	\
 							-Wformat=2 -Wpedantic -Winvalid-pch				\
-							-Wl,--no-undefined								\
-							-fno-gnu-unique $(if $($(NAME)_SHARED),-fPIC,)
+							-Wl,--no-undefined -O3							\
+							$(if $($(NAME)_SHARED),-fPIC,)
 CXXFLAGS				=	$(GCCFLAGS) -std=c++20
 CFLAGS					=	$(GCCFLAGS) -std=c99
 ifeq ($(LANG),cpp)
@@ -111,7 +111,7 @@ LDFLAGS					=	$(LIB_DIRS:%=-L%)
 all:					$(IGNORE_FILE) $($(NAME)_TARGET)
 	@:
 
-debug:					GCCFLAGS += -g
+debug:					GCCFLAGS += -g -Og
 debug:					all
 
 define nl
@@ -179,15 +179,15 @@ $($(NAME)_TARGET):
 	@-echo 'Archiving $(@:lib%$(LIB_EXT)=%) objects into $@...'
 	@$(AR) $(ARFLAGS) $@ $^
 
-main_debug:				GCCFLAGS += -g
-main_debug:				main
-	@:
-
 main: 					LIBS += $(NAME)
 main:					$($(NAME)_MAIN_OBJ) $($(NAME)_TARGET)	\
 						$(IGNORE_FILE)
 	@-echo 'Linking $(NAME) binary...'
 	@$(COMPILER) $(FLAGS) -o $(NAME) $< $(LDLIBS) $(LDFLAGS)
+
+main_debug:				GCCFLAGS += -g
+main_debug:				main
+	@:
 
 .PHONY:					main main_debug
 endif
