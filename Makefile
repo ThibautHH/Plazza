@@ -130,17 +130,19 @@ endif
 
 include $($(NAME)_MAIN_DEP) $($(NAME)_DEPS)
 
-$(OBJ_DIR)%$(DEP_EXT):	$(SRC_DIR)%$(SRC_EXT)
+SRC_BASE				=	$(if $(filter $(TESTS_DIR)%,$*),,$(SRC_DIR))
+
+$(OBJ_DIR)%$(DEP_EXT):	$$(SRC_BASE)%$(SRC_EXT)
 	@-echo 'Generating dependencies for $<...' >&2
 	@mkdir -p $(dir $@)
 	@$(GCC) $< -MM -MF $@ -MT $(@:$(DEP_EXT)=$(OBJ_EXT)) $(GCCFLAGS)
 
-$(OBJ_DIR)%$(PCH_EXT):	$(SRC_DIR)%$(HDR_EXT)
+$(OBJ_DIR)%$(PCH_EXT):	$$(SRC_BASE)%$(HDR_EXT)
 	@-echo 'Precompiling $<...' >&2
 	@mkdir -p $(dir $@)
 	@$(COMPILER) -c $(filter-out $(PCHFLAGS),$(FLAGS)) $< -o $@
 
-$(OBJ_DIR)%$(OBJ_EXT):	$(SRC_DIR)%$(SRC_EXT) $$(PCH)
+$(OBJ_DIR)%$(OBJ_EXT):	$$(SRC_BASE)%$(SRC_EXT) $$(PCH)
 	@-echo 'Compiling $<...' >&2
 	@mkdir -p $(dir $@)
 	@$(COMPILER) -c $(FLAGS) $< -o $@
