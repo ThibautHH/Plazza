@@ -147,7 +147,7 @@ $(OBJ_DIR)%$(OBJ_EXT):	$$(SRC_BASE)%$(SRC_EXT) $$(PCH)
 	@mkdir -p $(dir $@)
 	@$(COMPILER) -c $(FLAGS) $< -o $@
 
-include ignore-file.mk
+include ignore-file.mk tests.mk
 
 docs:
 	@-echo 'Generating documentation...' >&2
