@@ -36,21 +36,14 @@ LIB_EXT					:=	.a
 endif
 $(NAME)_TARGET			:=	$(NAME:%=lib%$(LIB_EXT))
 endif
+
 $(NAME)_DISPLAY			:=	The Plazza
-$(NAME)_TESTS			:=	$(NAME)_tests
 
 $(NAME)_MAIN_SRC		:=	$(SRC_DIR)main$(SRC_EXT)
-$(NAME)_SRCS			:=	$(addprefix $(SRC_DIR), $(addsuffix $(SRC_EXT),	\
+$(NAME)_SRCS			:=	$(addsuffix $(SRC_EXT),$(addprefix $(SRC_DIR),	\
 								Termination									\
 							))
-$($(NAME)_TESTS)_SRCS	:=	$(shell find $(TESTS_DIR) -type f				\
-							-name '*$(SRC_EXT)' ! -name ".*" 2>/dev/null)
 
-IGNORE_FILE				:=	.gitignore
-IGNORED_FILES			:=
-ifndef $(NAME)_LINK
-IGNORED_FILES			+=  $($(NAME)_MAIN_SRC)
-endif
 CODING_STYLE_LOG		:=	coding-style-reports.log
 CODING_STYLE_IMAGE		:=	ghcr.io/epitech/coding-style-checker:latest
 
@@ -58,12 +51,9 @@ $(NAME)_MAIN_OBJ		:=													\
 	$($(NAME)_MAIN_SRC:$(SRC_DIR)%$(SRC_EXT)=$(OBJ_DIR)%$(OBJ_EXT))
 $(NAME)_OBJS			:=													\
 	$($(NAME)_SRCS:$(SRC_DIR)%$(SRC_EXT)=$(OBJ_DIR)%$(OBJ_EXT))
-$($(NAME)_TESTS)_OBJS	:=													\
-	$($($(NAME)_TESTS)_SRCS:$(SRC_DIR)%$(SRC_EXT)=$(OBJ_DIR)%$(OBJ_EXT))
 
 $(NAME)_MAIN_DEP		:=	$($(NAME)_MAIN_OBJ:$(OBJ_EXT)=$(DEP_EXT))
 $(NAME)_DEPS			:=	$($(NAME)_OBJS:$(OBJ_EXT)=$(DEP_EXT))
-$($(NAME)_TESTS)_DEPS	:=	$($($(NAME)_TESTS)_OBJS:$(OBJ_EXT)=$(DEP_EXT))
 
 LIBS					:=
 ifndef $(NAME)_LINK
@@ -108,66 +98,11 @@ endif
 LDLIBS					=	$(LIBS:%=-l%)
 LDFLAGS					=	$(LIB_DIRS:%=-L%)
 
-all:					$(IGNORE_FILE) $($(NAME)_TARGET)
+all:					$($(NAME)_TARGET)
 	@:
 
 debug:					GCCFLAGS += -g -Og
 debug:					all
-
-define nl
-
-
-endef
-define $(IGNORE_FILE)_CONTENT
-##
-## EPITECH PROJECT, $(shell date +%Y)
-## $($(NAME)_DISPLAY)
-## File description:
-## $(IGNORE_FILE)
-##
-
-# Ignore object files
-$($(NAME)_MAIN_OBJ)
-$($(NAME)_OBJS:=$(nl))
-$($($(NAME)_TESTS)_OBJS:=$(nl))
-# Ignore precomiled headers
-$($(NAME)_OBJS:$(OBJ_EXT)=$(PCH_EXT)$(nl))
-$($($(NAME)_TESTS)_OBJS:$(OBJ_EXT)=$(PCH_EXT)$(nl))
-# Ignore dependency files
-$($(NAME)_MAIN_DEP)
-$($(NAME)_DEPS:=$(nl))
-$($($(NAME)_TESTS)_DEPS:=$(nl))
-# Ignore binary files
-$($(NAME)_TARGET)
-$($(NAME)_TESTS)
-a.out
-
-# Ignore logs and reports
-*.gcda
-*.gcno
-vgcore.*
-
-# Ignore coding-style logs
-$(CODING_STYLE_LOG)
-
-# Ignore temporary files
-*tmp*
-*~
-\#*#
-.#*
-
-# Miscellanous
-$(IGNORED_FILES:%=%$(nl))
-endef
-
-$(IGNORE_FILE):
-ifeq ($(wildcard $(IGNORE_FILE)),)
-	@-echo 'Generating $@ file...' >&2
-else
-	@-echo 'Updating $@ file...' >&2
-endif
-	@echo -ne "$(subst $(nl),\n,$($@_CONTENT))" > $@
-	@sed -i -E 's/^ //g' $@
 
 $($(NAME)_TARGET):		$($(NAME)_OBJS)
 ifdef $(NAME)_LINK
@@ -180,19 +115,20 @@ $($(NAME)_TARGET):
 	@$(AR) $(ARFLAGS) $@ $^
 
 main: 					LIBS += $(NAME)
-main:					$($(NAME)_MAIN_OBJ) $($(NAME)_TARGET)	\
-						$(IGNORE_FILE)
+main:					$($(NAME)_MAIN_OBJ) $($(NAME)_TARGET)
 	@-echo 'Linking $(NAME) binary...'
 	@$(COMPILER) $(FLAGS) -o $(NAME) $< $(LDLIBS) $(LDFLAGS)
 
-main_debug:				GCCFLAGS += -g
-main_debug:				main
+main-debug:				GCCFLAGS += -g
+main-debug:				main
 	@:
 
-.PHONY:					main main_debug
+IGNORE_FILE_RULES		+= main
+
+.PHONY:					main main-debug
 endif
 
--include $($(NAME)_MAIN_DEP) $($(NAME)_DEPS) $($($(NAME)_TESTS)_DEPS)
+include $($(NAME)_MAIN_DEP) $($(NAME)_DEPS)
 
 $(OBJ_DIR)%$(DEP_EXT):	$(SRC_DIR)%$(SRC_EXT)
 	@-echo 'Generating dependencies for $<...' >&2
@@ -209,7 +145,9 @@ $(OBJ_DIR)%$(OBJ_EXT):	$(SRC_DIR)%$(SRC_EXT) $$(PCH)
 	@mkdir -p $(dir $@)
 	@$(COMPILER) -c $(FLAGS) $< -o $@
 
-docs:					$(IGNORE_FILE)
+include ignore-file.mk
+
+docs:
 	@-echo 'Generating documentation...' >&2
 	@doxygen
 
@@ -227,13 +165,13 @@ clean:
 fclean:					clean
 	@-echo 'Deleting $($(NAME)_TARGET)...' >&2
 	@$(RM) $($(NAME)_TARGET)
-	@-echo 'Deleting $($(NAME)_TESTS)...' >&2
-	@$(RM) $($(NAME)_TESTS)
 
 re:						fclean all
 
-re_tests:				fclean tests_run
+IGNORE_FILE_RULES		+=	all
 
-.PHONY:					all debug tests_run tests_debug coverage	\
-						clean fclean re re_tests					\
-						docs coding-style $(IGNORE_FILE)
+.PHONY:					all debug clean fclean re docs coding-style
+
+ifdef IGNORE_FILE
+$(IGNORE_FILE_RULES):	$(IGNORE_FILE)
+endif
