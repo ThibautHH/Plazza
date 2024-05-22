@@ -19,6 +19,7 @@ obj/Termination.d
 # Ignore binary files
 a.out
 plazza
+plazza_tests
 
 # Ignore logs and reports
 *.gcda

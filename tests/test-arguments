@@ -1,0 +1,103 @@
+#!/bin/sh
+
+# Good arguments
+## Basic
+./plazza </dev/null 2>/dev/null 1.0 1 1000 || exit 1
+
+## Floating-point mulitplier
+./plazza </dev/null 2>/dev/null 1 1 1000 || exit 1
+./plazza </dev/null 2>/dev/null 5 1 1000 || exit 1
+./plazza </dev/null 2>/dev/null 1.0 1 1000 || exit 1
+./plazza </dev/null 2>/dev/null 1.5 1 1000 || exit 1
+./plazza </dev/null 2>/dev/null 0.1 1 1000 || exit 1
+./plazza </dev/null 2>/dev/null 0.0 1 1000 || exit 1
+./plazza </dev/null 2>/dev/null 0. 1 1000 || exit 1
+./plazza </dev/null 2>/dev/null .0 1 1000 || exit 1
+./plazza </dev/null 2>/dev/null .1 1 1000 || exit 1
+./plazza </dev/null 2>/dev/null +.5 1 1000 || exit 1
+./plazza </dev/null 2>/dev/null +1. 1 1000 || exit 1
+./plazza </dev/null 2>/dev/null +1.0 1 1000 || exit 1
+./plazza </dev/null 2>/dev/null +1 1 1000 || exit 1
+
+## With preceding whitespace
+./plazza </dev/null 2>/dev/null  '	 1.0' 1 1000 || exit 1
+./plazza </dev/null 2>/dev/null  1.0 '	 1' 1000 || exit 1
+./plazza </dev/null 2>/dev/null  1.0 1 '	 1000' || exit 1
+
+## With trailing whitespace
+./plazza </dev/null 2>/dev/null 1.0 1 '1000 	' || exit 1
+./plazza </dev/null 2>/dev/null 1.0 '1 	' 1000 || exit 1
+./plazza </dev/null 2>/dev/null '1.0 	' 1 1000 || exit 1
+
+log=$(mktemp)
+
+_TestError() {
+    ./plazza </dev/null 2>"$log" "$@"
+    if [ $? -eq 84 ]; then return 0; fi
+    echo >&2 "Command-line arguments:";
+    echo >&2 "$@";
+    echo >&2 "stderr contents (in $log):";
+    cat "$log";
+    return 1;
+}
+
+TestBadArgs() {
+    _TestError "$@" || return 1
+    grep -q "Usage" "$log" || echo >&2 "Usage message not displayed"
+    return 0
+}
+
+TestInvalidArgs() {
+    _TestError "$@" || return 1
+    grep -q "Invalid" "$log" || echo >&2 "Failure message not displayed"
+    return 0
+}
+
+# Bad arguments
+## Not enough arguments
+TestBadArgs 1.0 1 || exit 1
+TestBadArgs 1.0 || exit 1
+TestBadArgs || exit 1
+
+## Too many arguments
+TestBadArgs 1.0 1 1000 42 || exit 1
+TestBadArgs 1.0 1 1000 zajlfevb mvze 42 kjr bgfpverm || exit 1
+
+## Invalid arguments
+### Speed multiplier
+TestInvalidArgs -.5 1 1000 || exit 1
+TestInvalidArgs -1. 1 1000 || exit 1
+TestInvalidArgs -1.0 1 1000 || exit 1
+TestInvalidArgs -1 1 1000 || exit 1
+TestInvalidArgs zefajob 1 1000 || exit 1
+TestInvalidArgs a1 1 1000 || exit 1
+TestInvalidArgs 1a 1 1000 || exit 1
+TestInvalidArgs 'a    1' 1 1000 || exit 1
+TestInvalidArgs '1    a' 1 1000 || exit 1
+TestInvalidArgs '0 .1' 1 1000 || exit 1
+TestInvalidArgs '0. 1' 1 1000 || exit 1
+TestInvalidArgs '-0 .1' 1 1000 || exit 1
+TestInvalidArgs '-0. 1' 1 1000 || exit 1
+TestInvalidArgs '-   0.1' 1 1000 || exit 1
+
+### Cook count
+TestInvalidArgs 1 a 1000 || exit 1
+TestInvalidArgs 1 0 1000 || exit 1
+TestInvalidArgs 1 -1 1000 || exit 1
+TestInvalidArgs 1 1.0 1000 || exit 1
+TestInvalidArgs 1 a1 1000 || exit 1
+TestInvalidArgs 1 1a 1000 || exit 1
+TestInvalidArgs 1 '1    a' 1000 || exit 1
+TestInvalidArgs 1 'a    1' 1000 || exit 1
+TestInvalidArgs 1 65536 1000 || exit 1
+
+### Time multiplier
+TestInvalidArgs 1 1 a || exit 1
+TestInvalidArgs 1 1 1.0 || exit 1
+TestInvalidArgs 1 1 a1 || exit 1
+TestInvalidArgs 1 1 1a || exit 1
+TestInvalidArgs 1 1 '1    a' || exit 1
+TestInvalidArgs 1 1 'a    1' || exit 1
+TestInvalidArgs 1 1 9223372036854775808 || exit 1
+
+rm "$log"
