@@ -14,7 +14,7 @@
 int main(int, const char *const *)
 {
     Kitchen kitchen(5, 5, 1000);
-    constexpr auto pizza = Pizza{Margarita, S, 1};
+    constexpr auto pizza = Pizza{Margarita, S};
 
     for (uint8_t i = 0; i < 15; i++)
         if (!kitchen.orderPizza(pizza))

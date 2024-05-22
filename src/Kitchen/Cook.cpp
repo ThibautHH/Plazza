@@ -29,11 +29,10 @@ void Cook::cook(const Pizza pizza, const std::vector<std::shared_ptr<BalancingSe
     _endCookingTime = std::chrono::system_clock::now() + duration;
     mutex.unlock();
 
-    for (uint16_t i = 0; i < _pizza.number; i++)
-        std::this_thread::sleep_for(duration);
+    std::this_thread::sleep_for(duration);
 
     mutex.lock();
-    os >> _pizza << std::endl;
+    os << _pizza << std::endl;
     _isBusy = false;
     mutex.unlock();
 }
@@ -46,7 +45,7 @@ std::ostream &operator<<(std::ostream &os, const Cook &cook)
                               .count();
         cook.isBusy() && diff > 0)
         os << "Cook " << cook.getId() << " is cooking a " << pizzaName.at(cook.getPizza().type) << " "
-           << pizzaSize.at(cook.getPizza().size) << " x" << cook.getPizza().number << " end in " << diff << "ms";
+           << pizzaSize.at(cook.getPizza().size) << " end in " << diff << "ms";
     else
         os << "Cook " << cook.getId() << " is waiting for a pizza";
 
