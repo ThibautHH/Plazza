@@ -9,6 +9,7 @@
 #define PIZZA_HPP
 
 #include <map>
+#include <iostream>
 
 enum PizzaType { Regina = 1, Margarita = 2, Americana = 3, Fantasia = 4 };
 
@@ -30,36 +31,53 @@ enum Ingredient {
 static const std::map<Ingredient, std::string_view> ingredientName = {
     {DOUGH, "Dough"},       {TOMATO, "Tomato"},           {GRUYERE, "Gruyere"},
     {HAM, "Ham"},           {MUSHROOMS, "Mushrooms"},     {STEAK, "Steak"},
-    {EGGPLANT, "Eggplant"}, {GOAT_CHEESE, "Goat Cheese"}, {CHIEF_LOVE, "Chief Love"}};
+    {EGGPLANT, "Eggplant"}, {GOAT_CHEESE, "Goat Cheese"}, {CHIEF_LOVE, "Chief Love"}
+};
 
 
 static const std::map<PizzaType, std::pair<uint8_t, uint16_t>> pizzaRecipe = {
     {Regina, {1, {DOUGH | TOMATO | GRUYERE | HAM}}},
     {Margarita, {2, {DOUGH | TOMATO | GRUYERE}}},
     {Americana, {2, {DOUGH | TOMATO | GRUYERE | HAM | EGGPLANT}}},
-    {Fantasia, {4, {DOUGH | TOMATO | GOAT_CHEESE | CHIEF_LOVE}}}};
+    {Fantasia, {4, {DOUGH | TOMATO | GOAT_CHEESE | CHIEF_LOVE}}}
+};
 
 static const std::map<PizzaType, std::string_view> pizzaName = {
-    {Regina, "Regina"}, {Margarita, "Margarita"}, {Americana, "Americana"}, {Fantasia, "Fantasia"}};
+    {Regina, "Regina"}, {Margarita, "Margarita"}, {Americana, "Americana"}, {Fantasia, "Fantasia"}
+};
 
 static const std::map<PizzaSize, std::string_view> pizzaSize = {{S, "S"}, {M, "M"}, {L, "L"}, {XL, "XL"}, {XXL, "XXL"}};
+
+inline std::istream& operator>>(std::istream& is, PizzaType& type)
+{
+    uint8_t tmp;
+    is >> tmp;
+    type = static_cast<PizzaType>(tmp);
+    return is;
+}
+
+inline std::istream& operator>>(std::istream& is, PizzaSize& size)
+{
+    uint8_t tmp;
+    is >> tmp;
+    size = static_cast<PizzaSize>(tmp);
+    return is;
+}
 
 class Pizza {
 public:
     PizzaType type;
     PizzaSize size;
-    uint16_t number;
 
-    friend std::ostream &operator<<(std::ostream &os, const Pizza &pizza)
+    friend std::ostream &operator<<(std::ostream &os, Pizza pizza)
     {
-        os << pizzaName.at(pizza.type) << ";" << pizzaSize.at(pizza.size) << ";" << pizza.number;
+        os << pizzaName.at(pizza.type) << ";" << pizzaSize.at(pizza.size);
         return os;
     }
 
-    friend std::ostream &operator>>(std::ostream &os, const Pizza &pizza)
+    friend std::istream& operator>>(std::istream &is, Pizza &pizza)
     {
-        os << pizzaName.at(pizza.type) << " " << pizzaSize.at(pizza.size) << " x" << pizza.number;
-        return os;
+        return is >> pizza.type >> pizza.size;
     }
 };
 
