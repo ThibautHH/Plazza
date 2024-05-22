@@ -26,6 +26,11 @@ SRC			+=	$(addprefix $(lastword $(DIR))/,					\
 					CountingSemaphore.cpp							\
 				)
 
+DIR			+=	src/Shell
+SRC			+=	$(addprefix $(lastword $(DIR))/,					\
+					Shell.cpp										\
+				)
+
 FU_DIR		:=	tests/func
 
 UT_DIR		:=	tests/unit
