@@ -14,13 +14,13 @@ class Order {
         Order(PizzaType type, PizzaSize size, int quantity) : _type(type), _size(size), _quantity(quantity) {}
         ~Order() = default;
 
-        [[nodiscard]] PizzaType getType() const { return _type; }
-        [[nodiscard]] PizzaSize getSize() const { return _size; }
-        [[nodiscard]] int getQuantity() const { return _quantity; }
+        [[nodiscard]] constexpr PizzaType getType() const noexcept;
+        [[nodiscard]] constexpr PizzaSize getSize() const noexcept;
+        [[nodiscard]] constexpr int getQuantity() const noexcept;
     private:
-        PizzaType _type;
-        PizzaSize _size;
-        int _quantity;
+        const PizzaType _type;
+        const PizzaSize _size;
+        const int _quantity;
 };
 
 class Shell {
@@ -30,5 +30,8 @@ class Shell {
         void run();
         static Order parseOrder(const std::string &input);
     private:
+        static PizzaType parsePizzaType(const std::string& type);
+        static PizzaSize parsePizzaSize(const std::string& size);
+        static int parseAmount(const std::string& amountStr);
         bool _status = true;
 };

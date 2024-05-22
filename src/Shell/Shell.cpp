@@ -13,7 +13,7 @@
 Shell::Shell() {}
 Shell::~Shell() {}
 
-PizzaType parsePizzaType(const std::string& type) {
+PizzaType Shell::parsePizzaType(const std::string& type) {
     for (const auto& pair : pizzaName) {
         if (pair.second == type)
             return pair.first;
@@ -21,7 +21,7 @@ PizzaType parsePizzaType(const std::string& type) {
     throw std::invalid_argument("Invalid pizza type.");
 }
 
-PizzaSize parsePizzaSize(const std::string& size) {
+PizzaSize Shell::parsePizzaSize(const std::string& size) {
     for (const auto& pair : pizzaSize) {
         if (pair.second == size)
             return pair.first;
@@ -29,7 +29,7 @@ PizzaSize parsePizzaSize(const std::string& size) {
     throw std::invalid_argument("Invalid pizza size.");
 }
 
-int parseAmount(const std::string& amountStr) {
+int Shell::parseAmount(const std::string& amountStr) {
     if (amountStr[0] != 'x')
         throw std::invalid_argument("Amount must start with 'x'");
 
@@ -77,4 +77,16 @@ void Shell::run() {
             std::cerr << e.what() << std::endl;
         }
     }
+}
+
+constexpr PizzaType Order::getType() const noexcept {
+    return _type;
+}
+
+constexpr PizzaSize Order::getSize() const noexcept {
+    return _size;
+}
+
+constexpr int Order::getQuantity() const noexcept {
+    return _quantity;
 }
