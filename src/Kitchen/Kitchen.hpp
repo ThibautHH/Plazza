@@ -39,6 +39,15 @@ public:
 
     bool orderPizza(Pizza pizza);
 
+    [[nodiscard]] uint16_t getMaxCooks() const { return _maxCooks; }
+    [[nodiscard]] float getCookingTime() const { return _cookingTime; }
+    [[nodiscard]] uint32_t getReloadTime() const { return _reloadTime; }
+    [[nodiscard]] std::shared_ptr<std::atomic<bool>> getIsRunning() const { return _isRunning; }
+    [[nodiscard]] CountingSemaphore &getNbCooks() { return _nbCooks; }
+    [[nodiscard]] std::queue<Pizza> &getWaitingPizzas() { return _waitingPizzas; }
+    [[nodiscard]] CountingSemaphore &getAsWaitingPizzas() { return _asWaitingPizzas; }
+    [[nodiscard]] std::vector<std::shared_ptr<BalancingSemaphore>> &getIngredients() { return _ingredients; }
+
     friend std::ostream &operator<<(std::ostream &os, const Kitchen &kitchen);
 };
 
