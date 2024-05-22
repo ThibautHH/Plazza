@@ -10,7 +10,7 @@
 #include <iostream>
 
 void Cook::cook(const Pizza pizza, const std::vector<std::shared_ptr<BalancingSemaphore>> &ingredients,
-                std::mutex &mutex)
+                std::mutex &mutex, std::ostream &os)
 {
     mutex.lock();
     _isBusy = true;
@@ -33,8 +33,7 @@ void Cook::cook(const Pizza pizza, const std::vector<std::shared_ptr<BalancingSe
         std::this_thread::sleep_for(duration);
 
     mutex.lock();
-    std::cout << "Cook " << _id << " finished cooking a " << pizzaName.at(_pizza.type) << " "
-              << pizzaSize.at(_pizza.size) << " x" << _pizza.number << std::endl;
+    os >> _pizza << std::endl;
     _isBusy = false;
     mutex.unlock();
 }

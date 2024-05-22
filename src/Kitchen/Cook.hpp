@@ -26,7 +26,8 @@ private:
 public:
     Cook(const uint16_t id, const float cookingTime) : _id(id), _cookingTime(cookingTime) {}
 
-    void cook(Pizza pizza, const std::vector<std::shared_ptr<BalancingSemaphore>> &ingredients, std::mutex &mutex);
+    void cook(Pizza pizza, const std::vector<std::shared_ptr<BalancingSemaphore>> &ingredients, std::mutex &mutex,
+              std::ostream &os);
 
     [[nodiscard]] uint16_t getId() const { return _id; }
     [[nodiscard]] float getCookingTime() const { return _cookingTime; }

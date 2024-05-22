@@ -7,8 +7,8 @@
 
 #include "Kitchen.hpp"
 
-Kitchen::Kitchen(const uint16_t maxCooks, const uint16_t cookingTime, const uint32_t reloadTime) :
-    _maxCooks(maxCooks), _cookingTime(cookingTime), _reloadTime(reloadTime)
+Kitchen::Kitchen(const uint16_t maxCooks, const uint16_t cookingTime, const uint32_t reloadTime, std::ostream &os) :
+    _maxCooks(maxCooks), _cookingTime(cookingTime), _reloadTime(reloadTime), _os(os)
 {
     for (uint16_t i = 0; i < _maxCooks; i++)
         _cooks.emplace_back(Cook(i + 1, _cookingTime), std::thread());
@@ -46,7 +46,7 @@ Kitchen::Kitchen(const uint16_t maxCooks, const uint16_t cookingTime, const uint
                             thread = std::thread(
                                 [this, pizza, &cook]
                                 {
-                                    cook.cook(pizza, _ingredients, _mutex);
+                                    cook.cook(pizza, _ingredients, _mutex, _os);
                                     _nbCooks.release();
                                 });
                             break;
