@@ -27,12 +27,6 @@ enum Ingredient {
     NB_INGREDIENTS = 9
 };
 
-struct Pizza {
-    PizzaType type;
-    PizzaSize size;
-    uint16_t number;
-};
-
 static const std::map<Ingredient, std::string_view> ingredientName = {
     {DOUGH, "Dough"},       {TOMATO, "Tomato"},           {GRUYERE, "Gruyere"},
     {HAM, "Ham"},           {MUSHROOMS, "Mushrooms"},     {STEAK, "Steak"},
@@ -50,5 +44,23 @@ static const std::map<PizzaType, std::string_view> pizzaName = {
 
 static const std::map<PizzaSize, std::string_view> pizzaSize = {{S, "S"}, {M, "M"}, {L, "L"}, {XL, "XL"}, {XXL, "XXL"}};
 
+class Pizza {
+public:
+    PizzaType type;
+    PizzaSize size;
+    uint16_t number;
+
+    friend std::ostream &operator<<(std::ostream &os, const Pizza &pizza)
+    {
+        os << pizzaName.at(pizza.type) << ";" << pizzaSize.at(pizza.size) << ";" << pizza.number;
+        return os;
+    }
+
+    friend std::ostream &operator>>(std::ostream &os, const Pizza &pizza)
+    {
+        os << pizzaName.at(pizza.type) << " " << pizzaSize.at(pizza.size) << " x" << pizza.number;
+        return os;
+    }
+};
 
 #endif // PIZZA_HPP

@@ -8,6 +8,7 @@
 #ifndef KITCHEN_HPP
 #define KITCHEN_HPP
 
+#include <iostream>
 #include <queue>
 #include <thread>
 
@@ -33,8 +34,10 @@ private:
     std::vector<std::shared_ptr<BalancingSemaphore>> _ingredients;
     std::vector<std::thread> _threadsIngredients;
 
+    std::ostream &_os;
+
 public:
-    Kitchen(uint16_t maxCooks, uint16_t cookingTime, uint32_t reloadTime);
+    Kitchen(uint16_t maxCooks, uint16_t cookingTime, uint32_t reloadTime, std::ostream &os = std::cout);
     ~Kitchen();
 
     bool orderPizza(Pizza pizza);
