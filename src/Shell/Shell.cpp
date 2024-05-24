@@ -13,9 +13,6 @@
 
 using namespace Plazza;
 
-Shell::Shell() {}
-Shell::~Shell() {}
-
 PizzaType Shell::parsePizzaType(const std::string& type) {
     for (const auto& pair : pizzaName) {
         if (pair.second == type)
