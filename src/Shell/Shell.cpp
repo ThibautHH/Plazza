@@ -81,15 +81,3 @@ void Shell::run() {
         }
     }
 }
-
-constexpr PizzaType Order::getType() const noexcept {
-    return _type;
-}
-
-constexpr PizzaSize Order::getSize() const noexcept {
-    return _size;
-}
-
-constexpr int Order::getQuantity() const noexcept {
-    return _quantity;
-}

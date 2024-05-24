@@ -16,9 +16,9 @@ namespace Plazza {
             Order(PizzaType type, PizzaSize size, int quantity) : _type(type), _size(size), _quantity(quantity) {}
             ~Order() = default;
 
-            [[nodiscard]] constexpr PizzaType getType() const noexcept;
-            [[nodiscard]] constexpr PizzaSize getSize() const noexcept;
-            [[nodiscard]] constexpr int getQuantity() const noexcept;
+            [[nodiscard]] constexpr PizzaType getType() const noexcept { return _type; }
+            [[nodiscard]] constexpr PizzaSize getSize() const noexcept { return _size; }
+            [[nodiscard]] constexpr int getQuantity() const noexcept { return _quantity; }
         private:
             const PizzaType _type;
             const PizzaSize _size;
