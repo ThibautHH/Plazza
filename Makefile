@@ -42,6 +42,8 @@ $(NAME)_DISPLAY			:=	The Plazza
 $(NAME)_MAIN_SRC		:=	$(SRC_DIR)main$(SRC_EXT)
 $(NAME)_SRCS			:=	$(addsuffix $(SRC_EXT),$(addprefix $(SRC_DIR),	\
 								Termination									\
+								$(addprefix subprocess/,					\
+									subprocess)								\
 							))
 
 CODING_STYLE_LOG		:=	coding-style-reports.log
