@@ -5,6 +5,7 @@
 ** Shell
 */
 
+#include <cstdint>
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -29,7 +30,7 @@ PizzaSize Shell::parsePizzaSize(const std::string& size) {
     throw std::invalid_argument("Invalid pizza size.");
 }
 
-int Shell::parseAmount(const std::string& amountStr) {
+std::uint32_t Shell::parseAmount(const std::string& amountStr) {
     if (amountStr[0] != 'x')
         throw std::invalid_argument("Amount must start with 'x'");
 
@@ -49,7 +50,7 @@ Order Shell::parseOrder(const std::string &input) {
     } else {
         PizzaType type = parsePizzaType(sType);
         PizzaSize size = parsePizzaSize(sSize);
-        int amount = parseAmount(amountStr);
+        std::uint32_t amount = parseAmount(amountStr);
         return {type, size, amount};
     }
 }
