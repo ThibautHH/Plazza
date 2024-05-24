@@ -8,7 +8,10 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+
 #include "Shell.hpp"
+
+using namespace Plazza;
 
 Shell::Shell() {}
 Shell::~Shell() {}

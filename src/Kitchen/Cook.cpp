@@ -9,6 +9,8 @@
 
 #include <iostream>
 
+using namespace Plazza::Kitchen;
+
 void Cook::cook(const Pizza pizza, const std::vector<std::shared_ptr<BalancingSemaphore>> &ingredients,
                 std::mutex &mutex, std::ostream &os)
 {
@@ -44,8 +46,8 @@ std::ostream &operator<<(std::ostream &os, const Cook &cook)
                                                                                 std::chrono::system_clock::now())
                               .count();
         cook.isBusy() && diff > 0)
-        os << "Cook " << cook.getId() << " is cooking a " << pizzaName.at(cook.getPizza().type) << " "
-           << pizzaSize.at(cook.getPizza().size) << " end in " << diff << "ms";
+        os << "Cook " << cook.getId() << " is cooking a " << Plazza::pizzaName.at(cook.getPizza().type) << " "
+           << Plazza::pizzaSize.at(cook.getPizza().size) << " end in " << diff << "ms";
     else
         os << "Cook " << cook.getId() << " is waiting for a pizza";
 

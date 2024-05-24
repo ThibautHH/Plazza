@@ -5,39 +5,43 @@
 ** Cook
 */
 
-#ifndef COOK_HPP
-#define COOK_HPP
+#ifndef PLAZZA_KITCHEN_COOK_HPP_
+    #define PLAZZA_KITCHEN_COOK_HPP_
 
-#include <memory>
+    #include <chrono>
+    #include <memory>
+    #include <mutex>
 
-#include "../Pizza.hpp"
-#include "../Wrappers/BalancingSemaphore.hpp"
+    #include "../Pizza.hpp"
+    #include "../Wrappers/BalancingSemaphore.hpp"
 
-class Cook {
-private:
-    const uint16_t _id;
-    float _cookingTime;
-    Pizza _pizza;
+namespace Plazza::Kitchen {
+    class Cook {
+        private:
+            const uint16_t _id;
+            float _cookingTime;
+            Pizza _pizza;
 
-    bool _isBusy = false;
+            bool _isBusy = false;
 
-    std::chrono::system_clock::time_point _endCookingTime;
+            std::chrono::system_clock::time_point _endCookingTime;
 
-public:
-    Cook(const uint16_t id, const float cookingTime) : _id(id), _cookingTime(cookingTime) {}
+        public:
+            Cook(const uint16_t id, const float cookingTime) : _id(id), _cookingTime(cookingTime), _pizza() {}
 
-    void cook(Pizza pizza, const std::vector<std::shared_ptr<BalancingSemaphore>> &ingredients, std::mutex &mutex,
-              std::ostream &os);
+            void cook(Pizza pizza, const std::vector<std::shared_ptr<BalancingSemaphore>> &ingredients, std::mutex &mutex,
+                    std::ostream &os);
 
-    [[nodiscard]] uint16_t getId() const { return _id; }
-    [[nodiscard]] float getCookingTime() const { return _cookingTime; }
-    [[nodiscard]] Pizza getPizza() const { return _pizza; }
-    [[nodiscard]] bool isBusy() const { return _isBusy; }
-    [[nodiscard]] std::chrono::system_clock::time_point getEndCookingTime() const { return _endCookingTime; }
+            [[nodiscard]] uint16_t getId() const { return _id; }
+            [[nodiscard]] float getCookingTime() const { return _cookingTime; }
+            [[nodiscard]] Pizza getPizza() const { return _pizza; }
+            [[nodiscard]] bool isBusy() const { return _isBusy; }
+            [[nodiscard]] std::chrono::system_clock::time_point getEndCookingTime() const { return _endCookingTime; }
 
-    void setBusy(const bool isBusy) { _isBusy = isBusy; }
+            void setBusy(const bool isBusy) { _isBusy = isBusy; }
 
-    friend std::ostream &operator<<(std::ostream &os, const Cook &cook);
-};
+            friend std::ostream &operator<<(std::ostream &os, const Cook &cook);
+    };
+}
 
-#endif // COOK_HPP
+#endif /* !PLAZZA_KITCHEN_COOK_HPP_ */

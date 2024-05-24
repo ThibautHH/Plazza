@@ -7,6 +7,8 @@
 
 #include "Kitchen.hpp"
 
+using namespace Plazza::Kitchen;
+
 Kitchen::Kitchen(const uint16_t maxCooks, const uint16_t cookingTime, const uint32_t reloadTime, std::ostream &os) :
     _maxCooks(maxCooks), _cookingTime(cookingTime), _reloadTime(reloadTime), _os(os)
 {
@@ -78,18 +80,4 @@ bool Kitchen::orderPizza(const Pizza pizza)
     _asWaitingPizzas.release();
     _waitingPizzas.push(pizza);
     return true;
-}
-
-std::ostream &operator<<(std::ostream &os, const Kitchen &kitchen)
-{
-    os << "Kitchen: (" << kitchen._maxCooks - kitchen._nbCooks.getValue() + kitchen._waitingPizzas.size() << "/"
-       << kitchen._maxCooks << " cooks)\n  Cooks:";
-    for (const auto &[cook, thread] : kitchen._cooks)
-        os << "\n    " << cook;
-    os << "\n  Ingredients:";
-    for (uint16_t i = 0; i < NB_INGREDIENTS; i++)
-        os << "\n    " << ingredientName.at(static_cast<Ingredient>(1 << i)) << ": "
-           << kitchen._ingredients[i]->getValue();
-
-    return os;
 }
