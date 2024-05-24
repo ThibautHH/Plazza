@@ -30,12 +30,12 @@ namespace Plazza {
     class Shell {
         public:
             void run();
-            static Order parseOrder(const std::string &input);
+            static Order parseOrder(std::string_view input);
 
         private:
-            static PizzaType parsePizzaType(const std::string& type);
-            static PizzaSize parsePizzaSize(const std::string& size);
-            static std::uint32_t parseAmount(const std::string& amountStr);
+            static PizzaType parsePizzaType(std::string_view type);
+            static PizzaSize parsePizzaSize(std::string_view size);
+            static std::uint32_t parseAmount(std::string_view amountStr);
             bool _status = true;
     };
 }

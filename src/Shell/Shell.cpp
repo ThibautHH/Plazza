@@ -14,7 +14,7 @@
 
 using namespace Plazza;
 
-PizzaType Shell::parsePizzaType(const std::string& type) {
+PizzaType Shell::parsePizzaType(std::string_view type) {
     for (const auto& pair : pizzaName) {
         if (pair.second == type)
             return pair.first;
@@ -22,7 +22,7 @@ PizzaType Shell::parsePizzaType(const std::string& type) {
     throw std::invalid_argument("Invalid pizza type.");
 }
 
-PizzaSize Shell::parsePizzaSize(const std::string& size) {
+PizzaSize Shell::parsePizzaSize(std::string_view size) {
     for (const auto& pair : pizzaSize) {
         if (pair.second == size)
             return pair.first;
@@ -30,19 +30,19 @@ PizzaSize Shell::parsePizzaSize(const std::string& size) {
     throw std::invalid_argument("Invalid pizza size.");
 }
 
-std::uint32_t Shell::parseAmount(const std::string& amountStr) {
+std::uint32_t Shell::parseAmount(std::string_view amountStr) {
     if (amountStr[0] != 'x')
         throw std::invalid_argument("Amount must start with 'x'");
 
-    int amount = std::stoi(amountStr.substr(1));
+    int amount = std::stoi(std::string(amountStr.substr(1)));
     if (amount <= 0)
         throw std::invalid_argument("Amount must be greater than 0");
     return amount;
 }
 
 
-Order Shell::parseOrder(const std::string &input) {
-    std::istringstream iss(input);
+Order Shell::parseOrder(std::string_view input) {
+    std::istringstream iss((std::string(input)));
     std::string sType, sSize, amountStr;
 
     if (!(iss >> sType >> sSize >> amountStr)) {
