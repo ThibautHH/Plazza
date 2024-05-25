@@ -47,6 +47,7 @@ TESTFLAGS				+=	$(TEST_SUITES:%=--filter '%/*')
 
 tests:					$($(NAME)_TESTS)
 ifdef $(NAME)_TEST_SCRIPT
+tests:					$(NAME)
 	@-echo 'Running test script...' >&2
 	@$($(NAME)_TEST_SCRIPT)
 endif
