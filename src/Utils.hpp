@@ -28,10 +28,19 @@ namespace utils {
         static from_string_type from_string;
         static const std::vector<value_type> valid_values;
 
-        static std::ios_base& alpha(std::ios_base& os)
+        static std::ios_base& alpha(std::ios_base &s)
         {
-            os.iword(xalloc_index) = !os.iword(xalloc_index);
-            return os;
+            s.iword(xalloc_index) = !s.iword(xalloc_index);
+            return s;
+        }
+
+        template<typename U, typename V>
+            requires std::convertible_to<std::add_lvalue_reference_t<U>, std::ios_base&>
+                && std::convertible_to<std::add_lvalue_reference_t<V>, std::ios_base&>
+        static decltype(auto) copy_alpha(U &&s, V &&other)
+        {
+            s.iword(xalloc_index) = other.iword(xalloc_index);
+            return std::forward<U>(s);
         }
     };
 

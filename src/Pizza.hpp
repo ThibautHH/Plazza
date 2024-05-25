@@ -97,10 +97,12 @@ namespace Plazza {
         std::istringstream ps(word);
         if (std::getline(ps, word, ':').eof())
             is.setstate(std::ios_base::failbit);
-        utils::extract(std::istringstream(word), pizza.type, is);
+        utils::extract(utils::enum_traits<PizzaType>::copy_alpha(std::istringstream(word), is),
+            pizza.type, is);
         if (!std::getline(ps, word, ':').eof())
             is.setstate(std::ios_base::failbit);
-        utils::extract(std::istringstream(word), pizza.size, is);
+        utils::extract(utils::enum_traits<PizzaSize>::copy_alpha(std::istringstream(word), is),
+            pizza.size, is);
         return is;
     }
 }
