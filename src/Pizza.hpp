@@ -16,9 +16,9 @@
     #include "Utils.hpp"
 
 namespace Plazza {
-    enum PizzaType { Regina = 1, Margarita = 2, Americana = 3, Fantasia = 4 };
+    enum PizzaType { Regina = 1, Margarita = 2, Americana = 4, Fantasia = 8 };
 
-    enum PizzaSize { S = 1, M = 2, L = 3, XL = 4, XXL = 5 };
+    enum PizzaSize { S = 1, M = 2, L = 4, XL = 8, XXL = 16 };
 
     enum Ingredient {
         DOUGH          = 0b000000001,
