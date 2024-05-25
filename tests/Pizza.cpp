@@ -8,14 +8,9 @@
 #include <criterion/criterion.h>
 #include <criterion/new/assert.h>
 
-#include "../src/Pizza.hpp"
+#include "Common.hpp"
 
 using namespace Plazza;
-
-constexpr bool operator==(Pizza const &lhs, Pizza const &rhs) noexcept
-{
-    return lhs.type == rhs.type && lhs.size == rhs.size;
-}
 
 Test(Pizza, extractBasic)
 {

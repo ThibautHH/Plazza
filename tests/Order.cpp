@@ -9,14 +9,9 @@
 #include <criterion/new/assert.h>
 #include <sstream>
 
-#include "../src/Order.hpp"
+#include "Common.hpp"
 
 using namespace Plazza;
-
-constexpr bool operator==(Order const &lhs, Order const &rhs) noexcept
-{
-    return lhs.type == rhs.type && lhs.size == rhs.size && lhs.quantity == rhs.quantity;
-}
 
 Test(Order, extractBasic)
 {
