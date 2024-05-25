@@ -41,15 +41,17 @@ void Cook::cook(const Pizza pizza, const std::vector<std::shared_ptr<BalancingSe
 
 std::ostream &operator<<(std::ostream &os, const Cook &cook)
 {
+    const auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(
+            cook.getEndCookingTime() - std::chrono::system_clock::now()
+        ).count();
 
-    if (const auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(cook.getEndCookingTime() -
-                                                                                std::chrono::system_clock::now())
-                              .count();
-        cook.isBusy() && diff > 0)
-        os << "Cook " << cook.getId() << " is cooking a " << Plazza::pizzaName.at(cook.getPizza().type) << " "
-           << Plazza::pizzaSize.at(cook.getPizza().size) << " end in " << diff << "ms";
+    os << utils::enum_traits<Plazza::PizzaSize>::alpha << utils::enum_traits<Plazza::PizzaType>::alpha
+        << "Cook " << cook.getId();
+    if (cook.isBusy() && diff > 0)
+        os << " is cooking a \"" << cook.getPizza().type << "\" in size "
+           << cook.getPizza().size << ", ready in " << diff << "ms.";
     else
-        os << "Cook " << cook.getId() << " is waiting for a pizza";
-
+        os << " is waiting for an order.";
+    os << utils::enum_traits<Plazza::PizzaSize>::alpha << utils::enum_traits<Plazza::PizzaType>::alpha;
     return os;
 }

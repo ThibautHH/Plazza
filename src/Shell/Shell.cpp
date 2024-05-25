@@ -6,6 +6,7 @@
 */
 
 #include <cstdint>
+#include <stdexcept>
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -15,19 +16,19 @@
 using namespace Plazza;
 
 PizzaType Shell::parsePizzaType(std::string_view type) {
-    for (const auto& pair : pizzaName) {
-        if (pair.second == type)
-            return pair.first;
+    try {
+        return utils::enum_traits<PizzaType>::from_string.at(type);
+    } catch (const std::out_of_range &) {
+        throw std::invalid_argument("Invalid pizza type.");
     }
-    throw std::invalid_argument("Invalid pizza type.");
 }
 
 PizzaSize Shell::parsePizzaSize(std::string_view size) {
-    for (const auto& pair : pizzaSize) {
-        if (pair.second == size)
-            return pair.first;
+    try {
+        return utils::enum_traits<PizzaSize>::from_string.at(size);
+    } catch (const std::out_of_range &) {
+        throw std::invalid_argument("Invalid pizza size.");
     }
-    throw std::invalid_argument("Invalid pizza size.");
 }
 
 std::uint32_t Shell::parseAmount(std::string_view amountStr) {

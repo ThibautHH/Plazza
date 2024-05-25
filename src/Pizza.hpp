@@ -8,9 +8,12 @@
 #ifndef PLAZZA_PIZZA_HPP_
     #define PLAZZA_PIZZA_HPP_
 
+    #include <algorithm>
     #include <cstdint>
-    #include <map>
     #include <iostream>
+    #include <sstream>
+
+    #include "Utils.hpp"
 
 namespace Plazza {
     enum PizzaType { Regina = 1, Margarita = 2, Americana = 3, Fantasia = 4 };
@@ -30,58 +33,76 @@ namespace Plazza {
         NB_INGREDIENTS = 9
     };
 
-    static const std::map<Ingredient, std::string_view> ingredientName = {
+    static const std::unordered_map<Ingredient, std::string_view> ingredientName = {
         {DOUGH, "Dough"},       {TOMATO, "Tomato"},           {GRUYERE, "Gruyere"},
         {HAM, "Ham"},           {MUSHROOMS, "Mushrooms"},     {STEAK, "Steak"},
         {EGGPLANT, "Eggplant"}, {GOAT_CHEESE, "Goat Cheese"}, {CHIEF_LOVE, "Chief Love"}
     };
 
 
-    static const std::map<PizzaType, std::pair<std::uint8_t, std::uint16_t>> pizzaRecipe = {
+    static const std::unordered_map<PizzaType, std::pair<std::uint8_t, std::uint16_t>> pizzaRecipe = {
         {Regina, {1, {DOUGH | TOMATO | GRUYERE | HAM}}},
         {Margarita, {2, {DOUGH | TOMATO | GRUYERE}}},
         {Americana, {2, {DOUGH | TOMATO | GRUYERE | HAM | EGGPLANT}}},
         {Fantasia, {4, {DOUGH | TOMATO | GOAT_CHEESE | CHIEF_LOVE}}}
     };
 
-    static const std::map<PizzaType, std::string_view> pizzaName = {
-        {Regina, "Regina"}, {Margarita, "Margarita"}, {Americana, "Americana"}, {Fantasia, "Fantasia"}
+    struct Pizza {
+        PizzaType type;
+        PizzaSize size;
     };
 
-    static const std::map<PizzaSize, std::string_view> pizzaSize = {{S, "S"}, {M, "M"}, {L, "L"}, {XL, "XL"}, {XXL, "XXL"}};
-
-    inline std::istream& operator>>(std::istream& is, PizzaType& type)
+    template<typename T> requires std::is_enum_v<T>
+    inline std::ostream& operator<<(std::ostream& os, T value)
     {
-        std::uint8_t tmp;
-        is >> tmp;
-        type = static_cast<PizzaType>(tmp);
+        if (os.iword(utils::enum_traits<T>::xalloc_index))
+            os << utils::enum_traits<T>::to_string.at(value);
+        else
+            os << static_cast<std::underlying_type_t<T>>(value);
+        return os;
+    }
+
+    template<typename T> requires std::is_enum_v<T>
+    inline std::istream& operator>>(std::istream& is, T& value)
+    {
+        std::string word;
+        is >> word;
+        if (is.iword(utils::enum_traits<T>::xalloc_index))
+            try {
+                value = utils::enum_traits<T>::from_string.at(word);
+            } catch (const std::out_of_range &) {
+                is.setstate(std::ios_base::failbit);
+            }
+        else {
+            std::underlying_type_t<T> v = 0;
+            utils::extract(std::istringstream(word), v, is);
+            const auto end = std::end(utils::enum_traits<T>::valid_values);
+            if (std::find(std::begin(utils::enum_traits<T>::valid_values), end, static_cast<T>(v)) == end)
+                is.setstate(std::ios_base::failbit);
+            else
+                value = static_cast<T>(v);
+        }
         return is;
     }
 
-    inline std::istream& operator>>(std::istream& is, PizzaSize& size)
+    inline std::ostream &operator<<(std::ostream &os, Pizza pizza)
     {
-        std::uint8_t tmp;
-        is >> tmp;
-        size = static_cast<PizzaSize>(tmp);
-        return is;
+        return os << pizza.type << ':' << pizza.size;
     }
 
-    class Pizza {
-        public:
-            PizzaType type;
-            PizzaSize size;
-
-            friend std::ostream &operator<<(std::ostream &os, Pizza pizza)
-            {
-                os << pizzaName.at(pizza.type) << ";" << pizzaSize.at(pizza.size);
-                return os;
-            }
-
-            friend std::istream& operator>>(std::istream &is, Pizza &pizza)
-            {
-                return is >> pizza.type >> pizza.size;
-            }
-    };
+    inline std::istream& operator>>(std::istream &is, Pizza &pizza)
+    {
+        std::string word;
+        is >> word;
+        std::istringstream ps(word);
+        if (std::getline(ps, word, ':').eof())
+            is.setstate(std::ios_base::failbit);
+        utils::extract(std::istringstream(word), pizza.type, is);
+        if (!std::getline(ps, word, ':').eof())
+            is.setstate(std::ios_base::failbit);
+        utils::extract(std::istringstream(word), pizza.size, is);
+        return is;
+    }
 }
 
 #endif /* !PLAZZA_PIZZA_HPP_ */

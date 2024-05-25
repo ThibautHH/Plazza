@@ -50,6 +50,7 @@ $(NAME)_SRCS			:=	$(addsuffix $(SRC_EXT),$(addprefix $(SRC_DIR),	\
 									BalancingSemaphore CountingSemaphore)	\
 								$(addprefix Shell/,							\
 									Shell)									\
+								Pizza										\
 							))
 
 CODING_STYLE_LOG		:=	coding-style-reports.log
