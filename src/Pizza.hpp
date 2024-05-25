@@ -52,6 +52,9 @@ namespace Plazza {
         PizzaSize size;
     };
 
+    typedef utils::enum_traits<PizzaType> PizzaTypeTraits;
+    typedef utils::enum_traits<PizzaSize> PizzaSizeTraits;
+
     template<typename T> requires std::is_enum_v<T>
     inline std::ostream& operator<<(std::ostream& os, T value)
     {
@@ -97,11 +100,11 @@ namespace Plazza {
         std::istringstream ps(word);
         if (std::getline(ps, word, ':').eof())
             is.setstate(std::ios_base::failbit);
-        utils::extract(utils::enum_traits<PizzaType>::copy_alpha(std::istringstream(word), is),
+        utils::extract(PizzaTypeTraits::copy_alpha(std::istringstream(word), is),
             pizza.type, is);
         if (!std::getline(ps, word, ':').eof())
             is.setstate(std::ios_base::failbit);
-        utils::extract(utils::enum_traits<PizzaSize>::copy_alpha(std::istringstream(word), is),
+        utils::extract(PizzaSizeTraits::copy_alpha(std::istringstream(word), is),
             pizza.size, is);
         return is;
     }

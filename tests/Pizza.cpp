@@ -191,7 +191,7 @@ Test(Pizza, extractAlpha)
 {
     Pizza p{};
     std::istringstream iss("Margarita:S");
-    iss >> utils::enum_traits<PizzaType>::alpha >> utils::enum_traits<PizzaSize>::alpha;
+    iss >> PizzaTypeTraits::alpha >> PizzaSizeTraits::alpha;
     utils::extract(iss, p);
     cr_expect(zero(iss.fail()));
     cr_expect(not(zero(iss.eof())));
@@ -202,7 +202,7 @@ Test(Pizza, extractAlphaOtherType)
 {
     Pizza p{};
     std::istringstream iss("Regina:S");
-    iss >> utils::enum_traits<PizzaType>::alpha >> utils::enum_traits<PizzaSize>::alpha;
+    iss >> PizzaTypeTraits::alpha >> PizzaSizeTraits::alpha;
     utils::extract(iss, p);
     cr_expect(zero(iss.fail()));
     cr_expect(not(zero(iss.eof())));
@@ -213,7 +213,7 @@ Test(Pizza, extractAlphaOtherSize)
 {
     Pizza p{};
     std::istringstream iss("Margarita:XL");
-    iss >> utils::enum_traits<PizzaType>::alpha >> utils::enum_traits<PizzaSize>::alpha;
+    iss >> PizzaTypeTraits::alpha >> PizzaSizeTraits::alpha;
     utils::extract(iss, p);
     cr_expect(zero(iss.fail()));
     cr_expect(not(zero(iss.eof())));
@@ -224,7 +224,7 @@ Test(Pizza, extractAlphaOtherTypeAndSize)
 {
     Pizza p{};
     std::istringstream iss("Regina:L");
-    iss >> utils::enum_traits<PizzaType>::alpha >> utils::enum_traits<PizzaSize>::alpha;
+    iss >> PizzaTypeTraits::alpha >> PizzaSizeTraits::alpha;
     utils::extract(iss, p);
     cr_expect(zero(iss.fail()));
     cr_expect(not(zero(iss.eof())));
@@ -235,7 +235,7 @@ Test(Pizza, extractAlphaPadding)
 {
     Pizza p{};
     std::istringstream iss(" \n\vMargarita:S\v");
-    iss >> utils::enum_traits<PizzaType>::alpha >> utils::enum_traits<PizzaSize>::alpha;
+    iss >> PizzaTypeTraits::alpha >> PizzaSizeTraits::alpha;
     utils::extract(iss, p);
     cr_expect(zero(iss.fail()));
     cr_expect(zero(iss.eof()));
@@ -246,7 +246,7 @@ Test(Pizza, extractAlphaInvalidType)
 {
     Pizza p{};
     std::istringstream iss("Lol:S");
-    iss >> utils::enum_traits<PizzaType>::alpha >> utils::enum_traits<PizzaSize>::alpha;
+    iss >> PizzaTypeTraits::alpha >> PizzaSizeTraits::alpha;
     utils::extract(iss, p);
     cr_expect(not(zero(iss.fail())));
 }
@@ -255,7 +255,7 @@ Test(Pizza, extractAlphaInvalidSize)
 {
     Pizza p{};
     std::istringstream iss("Margarita:XXS");
-    iss >> utils::enum_traits<PizzaType>::alpha >> utils::enum_traits<PizzaSize>::alpha;
+    iss >> PizzaTypeTraits::alpha >> PizzaSizeTraits::alpha;
     utils::extract(iss, p);
     cr_expect(not(zero(iss.fail())));
 }
@@ -264,7 +264,7 @@ Test(Pizza, extractAlphaInvalidTypeAndSize)
 {
     Pizza p{};
     std::istringstream iss("Lol:XXS");
-    iss >> utils::enum_traits<PizzaType>::alpha >> utils::enum_traits<PizzaSize>::alpha;
+    iss >> PizzaTypeTraits::alpha >> PizzaSizeTraits::alpha;
     utils::extract(iss, p);
     cr_expect(not(zero(iss.fail())));
 }
