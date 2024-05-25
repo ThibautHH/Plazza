@@ -21,10 +21,14 @@ Shell::Shell(Reception &reception)
 static std::optional<bool> isCommandExit(std::string command)
 {
     std::istringstream iss(std::move(command));
-    if ((iss >> command).eof() && command.empty())
+    command.clear();
+    iss >> command;
+    if (command.empty())
         return std::nullopt;
     bool ret = command == "exit";
-    if (!((iss >> command).eof() && command.empty()))
+    command.clear();
+    iss >> command;
+    if (!command.empty())
         return false;
     return ret;
 }
@@ -34,18 +38,22 @@ std::list<Order> Shell::parseOrders(std::string commandLine, bool &exited)
     std::list<Order> orders;
     bool processed = false;
     for (std::istringstream command(std::move(commandLine));
-        !std::getline(command, commandLine, ';') && !processed;
+        std::getline(command, commandLine, ';') && !processed;
         processed = command.eof()) {
         const auto res = isCommandExit(commandLine);
         if (!res.has_value())
             continue;
-        else if (res.value()) {
+        if (res.value()) {
             exited = true;
             break;
         }
-        auto order = utils::extract<Order>(command);
-        if (!order.has_value() || !((command >> commandLine).eof() && commandLine.empty())) {
-            std::cerr << "Invalid command" << std::endl;
+        std::istringstream iss(std::move(commandLine));
+        auto order = utils::extract<Order>(iss);
+        commandLine.clear();
+        iss >> commandLine;
+        if (!order.has_value() || !commandLine.empty()) {
+            if (isatty(STDIN_FILENO))
+                std::cerr << "Invalid command" << std::endl;
             continue;
         }
         orders.push_back(*order);
