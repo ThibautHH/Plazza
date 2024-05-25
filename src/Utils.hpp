@@ -28,9 +28,29 @@ namespace utils {
         static from_string_type from_string;
         static const std::vector<value_type> valid_values;
 
+        static std::ios_base& pushalpha(std::ios_base &s)
+        {
+            s.iword(xalloc_index) &= ~0xff00;
+            s.iword(xalloc_index) |= (s.iword(xalloc_index) & 0xff) << 8;
+            return s;
+        }
+
+        static std::ios_base& popalpha(std::ios_base &s)
+        {
+            s.iword(xalloc_index) &= ~0xff;
+            s.iword(xalloc_index) |= (s.iword(xalloc_index) & 0xff00) >> 8;
+            return s;
+        }
+
         static std::ios_base& alpha(std::ios_base &s)
         {
-            s.iword(xalloc_index) = !s.iword(xalloc_index);
+            s.iword(xalloc_index) |= 1;
+            return s;
+        }
+
+        static std::ios_base& noalpha(std::ios_base &s)
+        {
+            s.iword(xalloc_index) &= ~0xff;
             return s;
         }
 
