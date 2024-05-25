@@ -15,6 +15,7 @@ obj/Wrappers/BalancingSemaphore.o
 obj/Wrappers/CountingSemaphore.o
 obj/Shell/Shell.o
 obj/Pizza.o
+obj/tests/Pizza.o
 
 # Ignore precomiled headers
 obj/Termination.hpp.gch
@@ -25,6 +26,7 @@ obj/Wrappers/BalancingSemaphore.hpp.gch
 obj/Wrappers/CountingSemaphore.hpp.gch
 obj/Shell/Shell.hpp.gch
 obj/Pizza.hpp.gch
+obj/tests/Pizza.hpp.gch
 
 # Ignore dependency files
 obj/main.d
@@ -36,6 +38,7 @@ obj/Wrappers/BalancingSemaphore.d
 obj/Wrappers/CountingSemaphore.d
 obj/Shell/Shell.d
 obj/Pizza.d
+obj/tests/Pizza.d
 
 # Ignore binary files
 a.out
