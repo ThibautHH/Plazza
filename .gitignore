@@ -16,6 +16,7 @@ obj/Wrappers/CountingSemaphore.o
 obj/Pizza.o
 obj/Shell.o
 obj/tests/Order.o
+obj/tests/Shell.o
 obj/tests/Pizza.o
 
 # Ignore precomiled headers
@@ -28,6 +29,7 @@ obj/Wrappers/CountingSemaphore.hpp.gch
 obj/Pizza.hpp.gch
 obj/Shell.hpp.gch
 obj/tests/Order.hpp.gch
+obj/tests/Shell.hpp.gch
 obj/tests/Pizza.hpp.gch
 
 # Ignore dependency files
@@ -41,6 +43,7 @@ obj/Wrappers/CountingSemaphore.d
 obj/Pizza.d
 obj/Shell.d
 obj/tests/Order.d
+obj/tests/Shell.d
 obj/tests/Pizza.d
 
 # Ignore binary files
