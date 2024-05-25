@@ -14,6 +14,8 @@ obj/Kitchen/Cook.o
 obj/Wrappers/BalancingSemaphore.o
 obj/Wrappers/CountingSemaphore.o
 obj/Pizza.o
+obj/Shell.o
+obj/tests/Order.o
 obj/tests/Pizza.o
 
 # Ignore precomiled headers
@@ -24,6 +26,8 @@ obj/Kitchen/Cook.hpp.gch
 obj/Wrappers/BalancingSemaphore.hpp.gch
 obj/Wrappers/CountingSemaphore.hpp.gch
 obj/Pizza.hpp.gch
+obj/Shell.hpp.gch
+obj/tests/Order.hpp.gch
 obj/tests/Pizza.hpp.gch
 
 # Ignore dependency files
@@ -35,6 +39,8 @@ obj/Kitchen/Cook.d
 obj/Wrappers/BalancingSemaphore.d
 obj/Wrappers/CountingSemaphore.d
 obj/Pizza.d
+obj/Shell.d
+obj/tests/Order.d
 obj/tests/Pizza.d
 
 # Ignore binary files
