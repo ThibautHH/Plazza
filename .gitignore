@@ -1,41 +1,4 @@
-##
-## EPITECH PROJECT, 2024
-## The Plazza
-## File description:
-## .gitignore
-##
-
-# Ignore object files
-obj/main.o
-obj/Termination.o
-
-
-# Ignore precomiled headers
-obj/Termination.hpp.gch
-
-
-# Ignore dependency files
-obj/main.d
-obj/Termination.d
-
-
-# Ignore binary files
+build
 plazza
-plazza_tests
-a.out
-
-# Ignore logs and reports
-*.gcda
-*.gcno
-vgcore.*
-
-# Ignore coding-style logs
-coding-style-reports.log
-
-# Ignore temporary files
-*tmp*
-*~
-\#*#
-.#*
-
-# Miscellanous
+.idea
+vscode
