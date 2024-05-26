@@ -22,6 +22,7 @@ endif
 OBJ_EXT					:=	.o
 DEP_EXT					:=	.d
 PCH_EXT					:=	$(HDR_EXT).gch
+CHD_EXT					:=	$(HDR_EXT).d
 
 NAME					:=	plazza
 $(NAME)_LINK			:=	1
@@ -61,6 +62,10 @@ $(NAME)_OBJS			:=													\
 
 $(NAME)_MAIN_DEP		:=	$($(NAME)_MAIN_OBJ:$(OBJ_EXT)=$(DEP_EXT))
 $(NAME)_DEPS			:=	$($(NAME)_OBJS:$(OBJ_EXT)=$(DEP_EXT))
+
+$(NAME)_CHDS			:=	$(wildcard $($(NAME)_SRCS:$(SRC_EXT)=$(HDR_EXT)))
+$(NAME)_CHDS			:=													\
+	$($(NAME)_CHDS:$(SRC_DIR)%$(HDR_EXT)=$(OBJ_DIR)%$(CHD_EXT))
 
 LIBS					:=
 ifndef $(NAME)_LINK
@@ -135,7 +140,7 @@ IGNORE_FILE_RULES		+= main
 .PHONY:					main main-debug
 endif
 
-include $($(NAME)_MAIN_DEP) $($(NAME)_DEPS)
+include $($(NAME)_MAIN_DEP) $($(NAME)_DEPS) $($(NAME)_CHDS)
 
 SRC_BASE				=	$(if $(filter $(TESTS_DIR)%,$*),,$(SRC_DIR))
 
@@ -143,6 +148,12 @@ $(OBJ_DIR)%$(DEP_EXT):	$$(SRC_BASE)%$(SRC_EXT)
 	@-echo 'Generating dependencies for $<...' >&2
 	@mkdir -p $(dir $@)
 	@$(GCC) $< -MM -MF $@ -MT $(@:$(DEP_EXT)=$(OBJ_EXT)) $(GCCFLAGS)
+
+$(OBJ_DIR)%$(CHD_EXT):	$$(SRC_BASE)%$(HDR_EXT)
+	@-echo 'Generating dependencies for $<...' >&2
+	@mkdir -p $(dir $@)
+	@$(GCC) $< -MM -MF $@ -MT $(@:$(CHD_EXT)=$(PCH_EXT))	\
+	$(filter-out $(PCHFLAGS),$(GCCFLAGS))
 
 $(OBJ_DIR)%$(PCH_EXT):	$$(SRC_BASE)%$(HDR_EXT)
 	@-echo 'Precompiling $<...' >&2

@@ -45,6 +45,14 @@ obj/Shell.d
 obj/tests/Order.d
 obj/tests/Shell.d
 obj/tests/Pizza.d
+obj/Termination.hpp.d
+obj/subprocess/subprocess.hpp.d
+obj/Kitchen/Kitchen.hpp.d
+obj/Kitchen/Cook.hpp.d
+obj/Wrappers/BalancingSemaphore.hpp.d
+obj/Wrappers/CountingSemaphore.hpp.d
+obj/Pizza.hpp.d
+obj/Shell.hpp.d
 
 # Ignore binary files
 a.out

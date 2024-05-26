@@ -15,11 +15,17 @@ $($(NAME)_TESTS)_OBJS	:=													\
 
 $($(NAME)_TESTS)_DEPS	:=	$($($(NAME)_TESTS)_OBJS:$(OBJ_EXT)=$(DEP_EXT))
 
-include	$($($(NAME)_TESTS)_DEPS)
+$($(NAME)_TESTS)_CHDS	:=													\
+	$(wildcard $($($(NAME)_TESTS)_SRCS:$(SRC_EXT)=$(HDR_EXT)))
+$($(NAME)_TESTS)_CHDS	:=													\
+	$($($(NAME)_TESTS)_CHDS:$(SRC_DIR)%$(HDR_EXT)=$(OBJ_DIR)%$(CHD_EXT))
+
+include	$($($(NAME)_TESTS)_DEPS) $($($(NAME)_TESTS)_CHDS)
 
 IGNORED_OBJS			+=	$($($(NAME)_TESTS)_OBJS)
 IGNORED_PCHS			+=	$($($(NAME)_TESTS)_OBJS:$(OBJ_EXT)=$(PCH_EXT))
 IGNORED_DEPS			+=	$($($(NAME)_TESTS)_DEPS)
+IGNORED_CHDS			+=	$($($(NAME)_TESTS)_CHDS)
 IGNORED_BINS			+=	$($(NAME)_TESTS)
 
 IGNORE_FILE_RULES		+=	tests tests-debug
