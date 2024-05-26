@@ -6,6 +6,7 @@
 */
 
 #include <chrono>
+#include <csignal>
 #include <iostream>
 #include <optional>
 #include <sstream>
@@ -49,6 +50,7 @@ int main(const int argc, const char * const * const argv)
         return 84;
     }
 
+    std::signal(SIGPIPE, SIG_IGN);
     auto speed = parseArg<double>(argv[1], INVALID_SPEED_MULTIPLIER);
     if (speed < 0)
         throw std::runtime_error(INVALID_SPEED_MULTIPLIER);
