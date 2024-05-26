@@ -21,10 +21,9 @@
 
 namespace subprocess {
     class subprocess {
-        private:
+        public:
             typedef __gnu_cxx::stdio_filebuf<char> buffer;
 
-        public:
             template<typename F, typename ...Args>
                 requires std::regular_invocable<F, std::iostream &&, int, Args&&...>
             void start(F &&function, Args&& ...args)
@@ -37,6 +36,7 @@ namespace subprocess {
                     return;
                 this->_buf.~buffer();
                 std::invoke(function, std::iostream(std::addressof(buf)), buf.fd(), std::forward<Args>(args)...);
+                buf.~buffer();
                 std::exit(0);
             }
 
@@ -62,6 +62,15 @@ namespace subprocess {
                 if (!_pid.has_value())
                     throw std::runtime_error("Subprocess not started");
                 return function(_ipc, _buf.fd(), std::forward<Args>(args)...);
+            }
+            template<typename F, typename ...Args>
+                requires std::regular_invocable<F, buffer &, Args&&...>
+            constexpr decltype(auto) ipc(F &&function, Args&& ...args)
+            {
+                std::lock_guard lock(_mutex);
+                if (!_pid.has_value())
+                    throw std::runtime_error("Subprocess not started");
+                return function(_buf, std::forward<Args>(args)...);
             }
 
         private:

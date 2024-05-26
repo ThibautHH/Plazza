@@ -6,6 +6,7 @@
 */
 
 #include <chrono>
+#include <istream>
 #include <mutex>
 #include <optional>
 #include <poll.h>
@@ -64,14 +65,15 @@ KitchenProcess::~KitchenProcess()
     if (this->hasClosed())
         return;
     this->_notificationThread.request_stop();
-    // The ipc on this side is closed automatically
+    // Close the ipc on this side
+    this->ipc([](subprocess::buffer &buf){ buf = subprocess::buffer(); });
     // That triggers a POLLHUP on the kitchen side, which closes the kitchen
 }
 
 void KitchenProcess::startKitchen(std::iostream &&ipc, int fd, double mult, std::uint16_t, std::optional<std::chrono::milliseconds>)
 {
     std::atomic<std::chrono::steady_clock::time_point> timeout =
-        std::chrono::steady_clock::now() + std::chrono::seconds(static_cast<long>(5. / mult));
+        std::chrono::steady_clock::now() + std::chrono::seconds(static_cast<long>(5.0 / mult));
     std::jthread kitchenThread([&ipc, fd, mult, &timeout](std::stop_token st){
         while (!st.stop_requested()) {
             struct pollfd pfd = {fd, POLLIN, 0};
@@ -80,7 +82,7 @@ void KitchenProcess::startKitchen(std::iostream &&ipc, int fd, double mult, std:
             else if (ret == 0) // No data available
                 continue;
             else if (pfd.revents & POLLHUP) {
-                // std::osyncstream(std::cout) << "Kitchen closing automatically" << std::endl;
+                std::osyncstream(std::cout) << "Kitchen: Closing automatically" << std::endl;
                 // Don't wait for the timeout
                 timeout = std::chrono::steady_clock::now();
                 break;
@@ -89,9 +91,9 @@ void KitchenProcess::startKitchen(std::iostream &&ipc, int fd, double mult, std:
             if (pizza.has_value()) {
                 std::osyncstream(std::cout) << "Kitchen: Reading pizza" << std::endl;
                 // Increment the timeout
-                timeout = std::chrono::steady_clock::now() + std::chrono::seconds(static_cast<long>(5. / mult));
+                timeout = std::chrono::steady_clock::now() + std::chrono::seconds(static_cast<long>(5.0 / mult));
                 // Send back the pizza when it's cooked
-                //ipc << *pizza << std::endl;
+                ipc << *pizza << std::flush;
             }
         }
     });
@@ -112,7 +114,9 @@ bool KitchenProcess::order(Pizza pizza)
     }
     // Just send everything, let the kitchen handle the buffering
     this->_pizzaCount++;
-    this->ipc([pizza](std::ostream &ipc){ ipc << pizza; });
+    std::osyncstream(std::cout) << "Kitchen #" << this->_id << " was ordered a \""
+        << pizza.type << "\" pizza in size " << pizza.size << std::endl;
+    this->ipc([pizza](std::ostream &ipc){ ipc << pizza << std::flush; });
     return true;
 }
 
@@ -145,8 +149,8 @@ void KitchenProcess::notificationThread(std::stop_token st, KitchenProcess &kitc
         //    && (status->is_terminated()
         //        || (status->was_stopped() && !kitchen.wait().was_continued())))
         //    return;
-        Notification n;
-        if (const auto status = kitchen.ipc([&n, &kitchen](std::istream &ipc, int fd) -> std::optional<bool> {
+        // Notification n;
+        if (const auto status = kitchen.ipc([/*&n, */&kitchen](std::istream &ipc, int fd) -> std::optional<bool> {
                 struct pollfd pfd = {fd, POLLIN, 0};
                 if (int ret = poll(&pfd, 1, 0); ret < 0)
                     throw std::runtime_error(std::string("poll: ") + strerror(errno));
@@ -159,22 +163,22 @@ void KitchenProcess::notificationThread(std::stop_token st, KitchenProcess &kitc
                     kitchen._closed = true;
                     return false;
                 }
+                // utils::extract(ipc, n);
                 const auto pizza = utils::extract<Pizza>(ipc);
                 if (pizza.has_value()) {
                     kitchen._pizzaCount--;
-                    // std::osyncstream(std::cout) <<PizzaTypeTraits::pushalpha << PizzaSizeTraits::pushalpha
-                    //     << PizzaTypeTraits::alpha << PizzaSizeTraits::alpha
-                    //     << "Kitchen #" << kitchen._id << " finished cooking a \""
-                    //     << pizza->type << "\" pizza in size " << pizza->size << std::endl
-                    //     << PizzaTypeTraits::popalpha << PizzaSizeTraits::popalpha;
+                    std::osyncstream(std::cout) <<PizzaTypeTraits::pushalpha << PizzaSizeTraits::pushalpha
+                        << PizzaTypeTraits::alpha << PizzaSizeTraits::alpha
+                        << "Kitchen #" << kitchen._id << " finished cooking a \""
+                        << pizza->type << "\" pizza in size " << pizza->size << std::endl
+                        << PizzaTypeTraits::popalpha << PizzaSizeTraits::popalpha;
                 }
-                // Trim whitespace
-                ipc >> std::ws;
                 return true;
             }); !status.has_value())
             continue;
         else if (!status.value())
             break;
+        // kitchen.handleNotification(n);
     }
     // Reap the subprocess, no zombies pls
     kitchen.wait();

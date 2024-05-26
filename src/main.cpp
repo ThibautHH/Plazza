@@ -65,5 +65,9 @@ int main(const int argc, const char * const * const argv)
 
     Plazza::Shell(reception).run();
 
+    std::jthread([](){
+        std::this_thread::sleep_for(2s);
+        std::exit(0);
+    }).detach();
     return 0;
 }
