@@ -6,6 +6,7 @@
 */
 
 #include <iostream>
+#include <syncstream>
 #include <unistd.h>
 
 #include "Utils.hpp"
@@ -80,12 +81,12 @@ void Shell::run()
     std::string commandLine;
     for (bool exited = false; !exited;) {
         if (isatty(STDIN_FILENO))
-            std::cout << "Plazza> ";
+            std::osyncstream(std::cout) << "Plazza> ";
         std::getline(std::cin, commandLine);
         for (auto order : parseOrders(commandLine, exited))
-            /*_reception.addOrder(order)*/;
+            _reception.addOrder(order);
         if (std::cin.eof()) {
-            std::cout << std::endl;
+            std::osyncstream(std::cout) << std::endl;
             break;
         }
     }

@@ -10,14 +10,12 @@
 
     #include <list>
 
-    // #include "Reception.hpp"
+    #include "Reception.hpp"
     #include "Pizza.hpp"
 
     #include "Order.hpp"
 
 namespace Plazza {
-    class Reception;
-
     struct Shell {
         static std::list<Order> parseOrders(std::string commandLine, bool &exited);
 

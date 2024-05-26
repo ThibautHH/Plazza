@@ -13,6 +13,7 @@
     #include <ext/stdio_filebuf.h>
     #include <functional>
     #include <iostream>
+    #include <mutex>
     #include <optional>
     #include <sys/wait.h>
 
@@ -20,19 +21,23 @@
 
 namespace subprocess {
     class subprocess {
+        private:
+            typedef __gnu_cxx::stdio_filebuf<char> buffer;
+
         public:
             template<typename F, typename ...Args>
-                requires std::regular_invocable<F, std::iostream&&, Args&&...>
+                requires std::regular_invocable<F, std::iostream &&, int, Args&&...>
             void start(F &&function, Args&& ...args)
             {
-                std::iostream ipc = make_ipc();
+                buffer buf = make_ipc();
                 _pid = fork();
                 if (_pid < 0)
                     throw std::runtime_error(std::string("fork: ") + strerror(errno));
                 else if (_pid != 0)
                     return;
-                std::invoke(function, std::move(ipc), std::forward<Args>(args)...);
-                exit(0);
+                this->_buf.~buffer();
+                std::invoke(function, std::iostream(std::addressof(buf)), buf.fd(), std::forward<Args>(args)...);
+                std::exit(0);
             }
 
             status wait() const;
@@ -40,13 +45,31 @@ namespace subprocess {
 
             constexpr std::optional<pid_t> get_pid() const noexcept { return _pid; }
 
-            constexpr std::optional<std::iostream>& get_ipc()  noexcept { return _parent_socket; }
+            template<typename F, typename ...Args>
+                requires std::regular_invocable<F, std::iostream &, Args&&...>
+            constexpr decltype(auto) ipc(F &&function, Args&& ...args)
+            {
+                std::lock_guard lock(_mutex);
+                if (!_pid.has_value())
+                    throw std::runtime_error("Subprocess not started");
+                return function(_ipc, std::forward<Args>(args)...);
+            }
+            template<typename F, typename ...Args>
+                requires std::regular_invocable<F, std::iostream &, int, Args&&...>
+            constexpr decltype(auto) ipc(F &&function, Args&& ...args)
+            {
+                std::lock_guard lock(_mutex);
+                if (!_pid.has_value())
+                    throw std::runtime_error("Subprocess not started");
+                return function(_ipc, _buf.fd(), std::forward<Args>(args)...);
+            }
 
         private:
-            std::optional<pid_t> _pid = 0;
-            std::optional<std::iostream> _parent_socket;
-            std::optional<__gnu_cxx::stdio_filebuf<char>> _pbuf, _cbuf;
-            std::iostream make_ipc();
+            std::mutex _mutex;
+            std::optional<pid_t> _pid = std::nullopt;
+            std::iostream _ipc = std::iostream(nullptr);
+            buffer _buf;
+            buffer make_ipc();
     };
 }
 

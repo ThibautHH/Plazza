@@ -11,6 +11,8 @@
 #include <sstream>
 #include <utility>
 
+#include "Shell.hpp"
+
 static const char USAGE[] = " [SPEED MULTIPLIER] [COOK COUNT] [RESTOCK DELAY]\n\n"
 "Starts The Plazza with kitchens restocking every RESTOCK DELAY milliseconds\n"
 "and having COOK COUNT cooks cooking at a speed of SPEED MULTIPLIER times the\n"
@@ -56,6 +58,10 @@ int main(const int argc, const char * const * const argv)
     std::optional<std::chrono::milliseconds> restockDelay(parseArg<std::int64_t>(argv[3], INVALID_RESTOCK_DELAY));
     if (restockDelay < 0ms)
         restockDelay = std::nullopt;
+
+    Plazza::Reception reception(speed, cookCount, restockDelay);
+
+    Plazza::Shell(reception).run();
 
     return 0;
 }
