@@ -9,15 +9,61 @@
 obj/main.o
 obj/Termination.o
 obj/subprocess/subprocess.o
+obj/Kitchen/Kitchen.o
+obj/Kitchen/Cook.o
+obj/Wrappers/BalancingSemaphore.o
+obj/Wrappers/CountingSemaphore.o
+obj/Pizza.o
+obj/Shell.o
+obj/Reception.o
+obj/KitchenProcess.o
+obj/tests/Notification.o
+obj/tests/Order.o
+obj/tests/Shell.o
+obj/tests/Pizza.o
 
 # Ignore precomiled headers
 obj/Termination.hpp.gch
 obj/subprocess/subprocess.hpp.gch
+obj/Kitchen/Kitchen.hpp.gch
+obj/Kitchen/Cook.hpp.gch
+obj/Wrappers/BalancingSemaphore.hpp.gch
+obj/Wrappers/CountingSemaphore.hpp.gch
+obj/Pizza.hpp.gch
+obj/Shell.hpp.gch
+obj/Reception.hpp.gch
+obj/KitchenProcess.hpp.gch
+obj/tests/Notification.hpp.gch
+obj/tests/Order.hpp.gch
+obj/tests/Shell.hpp.gch
+obj/tests/Pizza.hpp.gch
 
 # Ignore dependency files
 obj/main.d
 obj/Termination.d
 obj/subprocess/subprocess.d
+obj/Kitchen/Kitchen.d
+obj/Kitchen/Cook.d
+obj/Wrappers/BalancingSemaphore.d
+obj/Wrappers/CountingSemaphore.d
+obj/Pizza.d
+obj/Shell.d
+obj/Reception.d
+obj/KitchenProcess.d
+obj/tests/Notification.d
+obj/tests/Order.d
+obj/tests/Shell.d
+obj/tests/Pizza.d
+obj/Termination.hpp.d
+obj/subprocess/subprocess.hpp.d
+obj/Kitchen/Kitchen.hpp.d
+obj/Kitchen/Cook.hpp.d
+obj/Wrappers/BalancingSemaphore.hpp.d
+obj/Wrappers/CountingSemaphore.hpp.d
+obj/Pizza.hpp.d
+obj/Shell.hpp.d
+obj/Reception.hpp.d
+obj/KitchenProcess.hpp.d
 
 # Ignore binary files
 a.out

@@ -17,31 +17,31 @@ namespace subprocess {
         public:
             constexpr status(int wait_result) noexcept : _wait_result(wait_result) {};
 
-            constexpr bool was_continued() const noexcept
+            [[nodiscard]] constexpr bool was_continued() const noexcept
             {
                 return WIFCONTINUED(_wait_result);
             }
 
-            constexpr bool is_terminated() const noexcept
+            [[nodiscard]] constexpr bool is_terminated() const noexcept
             {
                 return was_signaled().has_value() || has_exited().has_value();
             }
 
-            constexpr std::optional<int> was_stopped() const noexcept
+            [[nodiscard]] constexpr std::optional<int> was_stopped() const noexcept
             {
                 if (WIFSTOPPED(_wait_result))
                     return WSTOPSIG(_wait_result);
                 return std::nullopt;
             }
 
-            constexpr std::optional<int> was_signaled() const noexcept
+            [[nodiscard]] constexpr std::optional<int> was_signaled() const noexcept
             {
                 if (WIFSIGNALED(_wait_result))
                     return WTERMSIG(_wait_result);
                 return std::nullopt;
             }
 
-            constexpr std::optional<int> has_exited() const noexcept
+            [[nodiscard]] constexpr std::optional<int> has_exited() const noexcept
             {
                 if (WIFEXITED(_wait_result))
                     return WEXITSTATUS(_wait_result);

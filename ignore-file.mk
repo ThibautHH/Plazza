@@ -15,6 +15,7 @@ IGNORE_FILE_RULES		+=	.PHONY
 IGNORED_OBJS			:=	$($(NAME)_MAIN_OBJ) $($(NAME)_OBJS)
 IGNORED_PCHS			:=	$($(NAME)_OBJS:$(OBJ_EXT)=$(PCH_EXT))
 IGNORED_DEPS			:=	$($(NAME)_MAIN_DEP) $($(NAME)_DEPS)
+IGNORED_CHDS			:=	$($(NAME)_CHDS)
 IGNORED_BINS			:=	$($(NAME)_TARGET)
 
 define nl
@@ -34,7 +35,7 @@ $(IGNORED_OBJS:=$(nl))
 # Ignore precomiled headers
 $(IGNORED_PCHS:=$(nl))
 # Ignore dependency files
-$(IGNORED_DEPS:=$(nl))
+$(IGNORED_DEPS:=$(nl))$(IGNORED_CHDS:=$(nl))
 # Ignore binary files
 a.out
 $(IGNORED_BINS:=$(nl))
