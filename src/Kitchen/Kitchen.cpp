@@ -7,37 +7,42 @@
 
 #include "Kitchen.hpp"
 
-Kitchen::Kitchen(const uint16_t maxCooks, const uint16_t cookingTime, const uint32_t reloadTime, std::ostream &os) :
-    _maxCooks(maxCooks), _cookingTime(cookingTime), _reloadTime(reloadTime), _os(os)
+Kitchen::Kitchen(const uint16_t maxCooks, const double cookingTime,
+                 const std::optional<std::chrono::milliseconds> reloadTime, std::ostream& os) :
+    _maxCooks(maxCooks), _cookingTime(cookingTime), _reloadTime(reloadTime), _nbCooks(maxCooks), _os(os)
 {
     for (uint16_t i = 0; i < _maxCooks; i++)
         _cooks.emplace_back(Cook(i + 1, _cookingTime), std::thread());
 
-    for (uint16_t i = 0; i < NB_INGREDIENTS; i++) {
+    for (uint16_t i = 0; i < NB_INGREDIENTS; i++)
+    {
         _ingredients.emplace_back(std::make_shared<BalancingSemaphore>(5));
         _threadsIngredients.emplace_back(
             [this, i]
             {
                 while (*_isRunning)
-                    _ingredients[i]->release([] { std::this_thread::sleep_for(std::chrono::milliseconds(1000)); });
+                    _ingredients[i]->release([this] { std::this_thread::sleep_for(_reloadTime.value()); });
             });
     }
 
     _cooksManager = std::thread(
         [this]
         {
-            while (*_isRunning) {
+            while (*_isRunning)
+            {
                 _asWaitingPizzas.acquire();
                 if (!*_isRunning)
                     continue;
                 _nbCooks.wait();
-                if (!_waitingPizzas.empty()) {
-                    for (auto &[cook, thread] : _cooks)
-                        if (!cook.isBusy()) {
+                if (!_waitingPizzas.empty())
+                {
+                    for (auto& [cook, thread] : _cooks)
+                        if (!cook.isBusy())
+                        {
                             if (thread.joinable())
                                 thread.join();
 
-                            const auto &pizza = _waitingPizzas.front();
+                            const auto& pizza = _waitingPizzas.front();
                             _waitingPizzas.pop();
 
                             _nbCooks.acquire();
@@ -58,13 +63,13 @@ Kitchen::Kitchen(const uint16_t maxCooks, const uint16_t cookingTime, const uint
 
 Kitchen::~Kitchen()
 {
-    for (auto &[cook, thread] : _cooks)
+    for (auto& [cook, thread] : _cooks)
         if (thread.joinable())
             thread.join();
     *_isRunning = false;
-    for (const auto &ingredient : _ingredients)
+    for (const auto& ingredient : _ingredients)
         ingredient->acquire();
-    for (auto &thread : _threadsIngredients)
+    for (auto& thread : _threadsIngredients)
         thread.join();
     _asWaitingPizzas.release();
     _cooksManager.join();
@@ -80,11 +85,11 @@ bool Kitchen::orderPizza(const Pizza pizza)
     return true;
 }
 
-std::ostream &operator<<(std::ostream &os, const Kitchen &kitchen)
+std::ostream& operator<<(std::ostream& os, const Kitchen& kitchen)
 {
     os << "Kitchen: (" << kitchen._maxCooks - kitchen._nbCooks.getValue() + kitchen._waitingPizzas.size() << "/"
         << kitchen._maxCooks << " cooks)\n  Cooks:";
-    for (const auto &[cook, thread] : kitchen._cooks)
+    for (const auto& [cook, thread] : kitchen._cooks)
         os << "\n    " << cook;
     os << "\n  Ingredients:";
     for (uint16_t i = 0; i < NB_INGREDIENTS; i++)

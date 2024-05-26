@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <thread>
 #include <list>
+#include <optional>
 
 #include "../Shell/Shell.hpp"
 #include "../Kitchen/Kitchen.hpp"
@@ -19,8 +20,8 @@ class Reception
 {
 private:
     uint16_t _maxCooks;
-    uint16_t _cookingTime;
-    uint32_t _reloadTime;
+    double _cookingTime;
+    std::optional<std::chrono::milliseconds> _reloadTime;
 
     std::thread _shellThread;
     Shell _shell;
@@ -30,7 +31,7 @@ private:
     bool _status = true;
 
 public:
-    Reception(uint16_t maxCooks, uint16_t cookingTime, uint32_t reloadTime);
+    Reception(uint16_t maxCooks, double cookingTime, std::optional<std::chrono::milliseconds> reloadTime);
     ~Reception();
 
     void run();
